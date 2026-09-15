@@ -69,18 +69,15 @@ export default async function AboutPage() {
                 </Appear>
               ))}
             </div>
-            <Appear delay={0.3} className="grid w-full gap-[10px] md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+            <Appear delay={0.3} className="flex w-full flex-wrap justify-center gap-[10px] md:gap-4">
               {about.ethics.map((text, i) => (
-                <div key={text} className="flex items-center gap-4 rounded-[10px] bg-surface p-[10px] pr-5 md:rounded-[16px]">
+                <div key={text} className="flex basis-full items-center gap-4 rounded-[10px] bg-surface p-[10px] pr-5 md:basis-[calc((100%-16px)/2)] md:rounded-[16px] lg:basis-[calc((100%-32px)/3)]">
                   <span className="icon-dark flex size-10 shrink-0 items-center justify-center overflow-clip rounded-[10px] ring-1 ring-inset ring-white/10">
                     <Img src={img.overviewIcons[i % 3]} alt="" w={40} className="h-5" loading="lazy" decoding="async" />
                   </span>
                   <p className="t-body text-muted">{text}</p>
                 </div>
               ))}
-            </Appear>
-            <Appear delay={0.4}>
-              <PillButton href="/about/team" tone="dark">{t("about.mission.cta", "Meet the team")}</PillButton>
             </Appear>
           </div>
         </div>
