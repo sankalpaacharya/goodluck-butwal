@@ -56,27 +56,31 @@ export default async function AboutPage() {
 
       <section className="flex w-full flex-col items-center">
         <div className="container-x">
-          <div className="grid gap-[50px] md:grid-cols-2">
-            <Appear className="flex flex-col items-start gap-[10px] md:gap-5">
-              <h2 className="t-h3">{t("about.mission.title", "Our mission")}</h2>
-              <p className="t-body text-muted">{about.mission}</p>
-              <h2 className="t-h3 pt-[10px]">{t("about.vision.title", "Our vision")}</h2>
-              <p className="t-body text-muted">{about.vision}</p>
-              <PillButton href="/about/team" tone="dark">{t("about.mission.cta", "Meet the team")}</PillButton>
+          <div className="flex flex-col items-start gap-[30px] md:gap-10 lg:gap-[50px]">
+            <div className="grid w-full gap-[30px] md:grid-cols-3 md:gap-[30px] lg:gap-10">
+              {[
+                [t("about.mission.title", "Our mission"), about.mission],
+                [t("about.vision.title", "Our vision"), about.vision],
+                [t("about.values.title", "Our values and ethics"), about.values],
+              ].map(([title, body], i) => (
+                <Appear key={title} delay={0.1 * i} className="flex flex-col items-start gap-[10px] md:gap-5">
+                  <h2 className="t-h3">{title}</h2>
+                  <p className="t-body text-muted">{body}</p>
+                </Appear>
+              ))}
+            </div>
+            <Appear delay={0.3} className="grid w-full gap-[10px] md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+              {about.ethics.map((text, i) => (
+                <div key={text} className="flex items-center gap-4 rounded-[10px] bg-surface p-[10px] pr-5 md:rounded-[16px]">
+                  <span className="icon-dark flex size-10 shrink-0 items-center justify-center overflow-clip rounded-[10px] ring-1 ring-inset ring-white/10">
+                    <Img src={img.overviewIcons[i % 3]} alt="" w={40} className="h-5" loading="lazy" decoding="async" />
+                  </span>
+                  <p className="t-body text-muted">{text}</p>
+                </div>
+              ))}
             </Appear>
-            <Appear delay={0.1} className="flex flex-col items-start gap-[10px] md:gap-5">
-              <h2 className="t-h3">{t("about.values.title", "Our values and ethics")}</h2>
-              <p className="t-body text-muted">{about.values}</p>
-              <div className="flex flex-col items-start gap-[10px] md:gap-5">
-                {about.ethics.map((text, i) => (
-                  <div key={text} className="flex items-start gap-4">
-                    <span className="icon-dark flex size-10 shrink-0 items-center justify-center overflow-clip rounded-[10px] ring-1 ring-inset ring-white/10">
-                      <Img src={img.overviewIcons[i % 3]} alt="" w={40} className="h-5" loading="lazy" decoding="async" />
-                    </span>
-                    <p className="t-body max-w-[500px] pt-2 text-muted">{text}</p>
-                  </div>
-                ))}
-              </div>
+            <Appear delay={0.4}>
+              <PillButton href="/about/team" tone="dark">{t("about.mission.cta", "Meet the team")}</PillButton>
             </Appear>
           </div>
         </div>
