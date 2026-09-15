@@ -1,15 +1,11 @@
-"use client";
-
 import type { PublicOffice } from "@/features/offices/queries";
-import { useOffice } from "@/features/offices/components/office";
 
-// Office contact cards, the chosen office first.
+// Fixed order, head office first and dark. Deliberately not the visitor's own office: this block
+// is the whole contact list, so everyone sees the same three in the same order.
 export function OfficeContactCards({ offices, whatsappLabel }: { offices: PublicOffice[]; whatsappLabel: string }) {
-  const { office } = useOffice();
-  const ordered = [...offices].sort((a, b) => Number(b.id === office) - Number(a.id === office));
   return (
     <div className="grid w-full gap-[10px]">
-      {ordered.map((o, i) => (
+      {offices.map((o, i) => (
         <div key={o.id} className={`flex flex-col gap-1 rounded-[10px] p-4 ring-1 ring-inset md:rounded-[20px] md:p-5 ${i === 0 ? "bg-ink text-white ring-ink" : "bg-white ring-hairline"}`}>
           <p className={`t-small ${i === 0 ? "text-gray-text" : "text-muted"}`}>{o.label}</p>
           <p className="text-[18px] font-semibold leading-[23.4px]">{o.city}, {o.country}</p>
