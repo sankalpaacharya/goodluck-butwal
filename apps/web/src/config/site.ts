@@ -66,6 +66,7 @@ export const officeById = (id: OfficeId) => offices.find((o) => o.id === id)!;
 export const social = [
   { label: "Facebook", href: "#", icon: "/images/social/facebook.webp" },
   { label: "Instagram", href: "#", icon: "/images/social/instagram.webp" },
+  { label: "TikTok", href: "#", icon: "/images/social/tiktok.webp" },
 ];
 
 // menuOnly: listed in the mobile menu but kept out of the header bar so it stays readable.
