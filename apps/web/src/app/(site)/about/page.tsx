@@ -11,7 +11,8 @@ import { Appear } from "@/components/ui/appear";
 import { PillButton } from "@/components/ui/button";
 import { Badge, SectionBg } from "@/components/ui/bits";
 import { VideoDialog } from "@/components/ui/video-dialog";
-import { InnerHero, SectionHead, StatCard, TeamCard } from "@/components/shared/inner";
+import { InnerHero, SectionHead, StatCard } from "@/components/shared/inner";
+import { AboutTeam } from "@/features/team/components/office-team";
 import { Partners } from "@/features/partners/components/partners";
 import { TabShoulders } from "@/components/shared/steps";
 import { Img } from "@/components/ui/img";
@@ -144,13 +145,7 @@ export default async function AboutPage() {
         <div className="container-x">
           <div className="flex flex-col items-center gap-[30px] md:gap-10 lg:gap-[50px]">
             <SectionHead badge={t("about.team.badge", "Expert team members")} title={t("about.team.title", "Our team at your service")} />
-            <div className="grid w-full grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 md:gap-x-[30px] md:gap-y-10 lg:grid-cols-5">
-              {team.slice(0, 5).map((m, i) => (
-                <div key={m.slug} className={i === 4 ? "col-span-2 md:col-span-1" : ""}>
-                  <TeamCard name={m.name} role={m.role} photo={m.photo} delay={0.08 * i} href={`/team/${m.slug}`} />
-                </div>
-              ))}
-            </div>
+            <AboutTeam team={team} />
             <Appear><PillButton href="/about/team" tone="dark">{t("about.team.cta", "Meet the whole team")}</PillButton></Appear>
           </div>
         </div>
