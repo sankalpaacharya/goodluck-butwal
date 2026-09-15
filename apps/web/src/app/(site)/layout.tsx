@@ -20,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     metadataBase: new URL(company.url),
     title: { default: company.name, template: `%s – ${company.short}` },
-    description: "Education counselling, visa guidance, scholarship guidance and IELTS coaching from offices in Melbourne, Butwal and Cebu.",
+    description: "Education counselling, visa guidance, migration guidance and IELTS coaching from offices in Melbourne, Butwal and Cebu.",
     icons: { icon: "/brand/icon.png" },
     openGraph: { siteName: company.name, type: "website" },
     ...(verification ? { verification: { google: verification } } : {}),

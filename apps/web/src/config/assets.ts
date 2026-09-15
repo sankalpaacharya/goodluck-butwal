@@ -66,7 +66,8 @@ export const serviceArt: Record<string, { image: string; imageAlt: string; video
     video: "/videos/visa-guidance.mp4",
     poster: "/images/services/visa-guidance-poster.webp",
   },
-  "scholarship-guidance": {
+  // Still the scholarship artwork: the client kept it when the service became Migration Guidance.
+  "migration-guidance": {
     image: "/images/services/scholarship-guidance-v2.webp",
     imageAlt: "Rolled diploma with a ribbon, gold coins and a trophy",
     video: "/videos/scholarship-guidance.mp4",

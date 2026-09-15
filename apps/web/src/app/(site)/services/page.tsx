@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     path: "/services",
     title: "Our services",
-    description: "Education counselling, visa guidance, scholarship guidance and IELTS coaching.",
+    description: "Education counselling, visa guidance, migration guidance and IELTS coaching.",
   });
 }
 

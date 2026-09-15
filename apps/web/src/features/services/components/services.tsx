@@ -77,7 +77,7 @@ function Tile({ s, icon, t, className = "" }: { s: Service; icon: string; t: Ton
 }
 
 export async function Services({ services }: { services: Service[] }) {
-  const [counselling, visa, scholarship, ielts] = services;
+  const [counselling, visa, migration, ielts] = services;
   const t = await loadText();
   return (
     <section id="services" className="py-section flex w-full flex-col items-center">
@@ -89,7 +89,7 @@ export async function Services({ services }: { services: Service[] }) {
               <h2 className="t-h2">{t("home.services.title", "Get the right help")}</h2>
             </Appear>
             <Appear delay={0.1} className="flex flex-1 flex-col items-start gap-4 md:items-end md:gap-5">
-              <p className="t-body text-muted md:text-right">{t("home.services.lead", "Education counselling, visa guidance, scholarship guidance and IELTS coaching.")}</p>
+              <p className="t-body text-muted md:text-right">{t("home.services.lead", "Education counselling, visa guidance, migration guidance and IELTS coaching.")}</p>
               <PillButton href="/services" tone="dark">
                 {t("home.services.cta", "View all services")}
               </PillButton>
@@ -99,7 +99,7 @@ export async function Services({ services }: { services: Service[] }) {
           <div className="grid w-full min-w-0 gap-5 md:grid-cols-2 lg:grid-cols-12 lg:gap-[30px]">
             <Appear className="min-w-0 lg:col-span-7"><Tile s={counselling} icon={img.statIcons[0]} t="blue" /></Appear>
             <Appear delay={0.1} className="min-w-0 lg:col-span-5"><Tile s={visa} icon={img.statIcons[3]} t="dark" /></Appear>
-            <Appear delay={0.2} className="min-w-0 lg:col-span-5"><Tile s={scholarship} icon={img.statIcons[2]} t="surface" /></Appear>
+            <Appear delay={0.2} className="min-w-0 lg:col-span-5"><Tile s={migration} icon={img.statIcons[2]} t="surface" /></Appear>
             <Appear delay={0.3} className="min-w-0 lg:col-span-7"><Tile s={ielts} icon={img.overviewIcons[1]} t="white" /></Appear>
           </div>
         </div>
