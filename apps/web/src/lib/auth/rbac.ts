@@ -14,6 +14,7 @@ export type Actor = {
 export type Entity =
   | "team"
   | "partners"
+  | "successStories"
   | "institutions"
   | "courses"
   | "courseCategories"
@@ -41,6 +42,7 @@ const both = (actions: Action[]): Record<UserRole, Action[]> => ({ admin: action
 const MATRIX: Record<Entity, Record<UserRole, Action[]>> = {
   team: both(CRUDP),
   partners: both(CRUDP),
+  successStories: both(CRUDP),
   institutions: both(CRUDP),
   courses: both(CRUDP),
   courseCategories: both(CRUD),

@@ -1,5 +1,5 @@
 import { img } from "@/config/assets";
-import { successStories, type SuccessStory } from "@/features/testimonials/testimonials";
+import { listSuccessStories, type SuccessStory } from "@/features/testimonials/queries";
 import type { GoogleRating } from "@/features/settings/queries";
 import { Appear } from "@/components/ui/appear";
 import { PillButton } from "@/components/ui/button";
@@ -25,7 +25,7 @@ function StoryCard({ s, tilt }: { s: SuccessStory; tilt: number }) {
 }
 
 export async function Stories({ googleRating }: { googleRating: GoogleRating }) {
-  const t = await loadText();
+  const [stories, t] = await Promise.all([listSuccessStories(), loadText()]);
   return (
     <section id="success-stories" className="flex w-full flex-col items-center">
       <div className="pb-section relative w-full overflow-clip bg-white pt-[60px] md:pt-[100px]">
@@ -46,13 +46,15 @@ export async function Stories({ googleRating }: { googleRating: GoogleRating }) 
             </div>
           </Appear>
 
-          <Appear delay={0.1} className="w-full">
-            <Ticker gap={40} speed={220} className="w-full py-4">
-              {successStories.map((s, i) => (
-                <StoryCard key={s.image} s={s} tilt={i % 2 ? 2.5 : -2.5} />
-              ))}
-            </Ticker>
-          </Appear>
+          {stories.length > 0 ? (
+            <Appear delay={0.1} className="w-full">
+              <Ticker gap={40} speed={220} className="w-full py-4">
+                {stories.map((s, i) => (
+                  <StoryCard key={s.id} s={s} tilt={i % 2 ? 2.5 : -2.5} />
+                ))}
+              </Ticker>
+            </Appear>
+          ) : null}
 
           <Appear delay={0.2}>
             <PillButton href="/success-stories" tone="dark">

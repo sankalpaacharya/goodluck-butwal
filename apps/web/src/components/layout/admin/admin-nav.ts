@@ -17,6 +17,7 @@ export const NAV: NavGroup[] = [
     items: [
       { href: "/admin/team", label: "Team", entity: "team" },
       { href: "/admin/partners", label: "Partners", entity: "partners" },
+      { href: "/admin/success-stories", label: "Success stories", entity: "successStories" },
       { href: "/admin/posts", label: "News", entity: "posts" },
       { href: "/admin/events", label: "Events", entity: "events" },
       { href: "/admin/institutions", label: "Institutions", entity: "institutions" },

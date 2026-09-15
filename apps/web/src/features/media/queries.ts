@@ -8,6 +8,7 @@ import {
   mediaAssets,
   partners,
   posts,
+  successStories,
   teamMembers,
   testPrepCourses,
 } from "@goodluck/db/schema";
@@ -123,7 +124,7 @@ export async function assetByPublicId(publicId: string, resourceType: ResourceTy
   return rows.find((row) => keyOf(row) === publicId) ?? null;
 }
 
-// Every column in the seven CMS sections that points at media_assets, with the label an admin
+// Every column in the CMS sections that points at media_assets, with the label an admin
 // would recognise.
 // Each reference is one column somewhere that points at a media row. `find` names what is using
 // one asset; `findMany` answers the same question for a page of them in a single query.
@@ -142,6 +143,11 @@ const REFERENCES: {
     kind: "Partner logo",
     findMany: (ids) =>
       db.select({ id: partners.logoId, label: partners.name }).from(partners).where(inArray(partners.logoId, ids)),
+  },
+  {
+    kind: "Success story",
+    findMany: (ids) =>
+      db.select({ id: successStories.imageId, label: successStories.title }).from(successStories).where(inArray(successStories.imageId, ids)),
   },
   {
     kind: "News banner",

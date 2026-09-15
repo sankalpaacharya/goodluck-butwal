@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { img } from "@/config/assets";
 import { getGoogleRating } from "@/features/settings/queries";
-import { reviews, successStories } from "@/features/testimonials/testimonials";
+import { reviews } from "@/features/testimonials/testimonials";
+import { listSuccessStories } from "@/features/testimonials/queries";
 import { loadText } from "@/features/site-text/queries";
 import { Appear } from "@/components/ui/appear";
 import { PillButton } from "@/components/ui/button";
@@ -21,14 +22,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SuccessStoriesPage() {
-  const [googleRating, t] = await Promise.all([getGoogleRating(), loadText()]);
+  const [googleRating, stories, t] = await Promise.all([getGoogleRating(), listSuccessStories(), loadText()]);
 
   return (
     <>
       <InnerHero badge={t("stories.hero.badge", "Success stories")} title={t("stories.hero.title", "Highly recommended")} lead={t("stories.hero.lead", "Visa grants and reviews shared by our clients.")} width={1260} after={
         <div className="grid w-full grid-cols-2 gap-[10px] md:grid-cols-2 md:gap-[30px] lg:grid-cols-3">
-          {successStories.map((s, i) => (
-            <Appear key={s.image} delay={0.05 * (i % 4)} className="aspect-square overflow-clip rounded-[10px] bg-surface ring-1 ring-hairline md:rounded-[20px]">
+          {stories.map((s, i) => (
+            <Appear key={s.id} delay={0.05 * (i % 4)} className="aspect-square overflow-clip rounded-[10px] bg-surface ring-1 ring-hairline md:rounded-[20px]">
               <ImageDialog src={s.image} alt={s.alt} className="size-full">
                 <Img src={s.image} alt={s.alt} sizes={CARD_SIZES} className="size-full object-cover" loading="lazy" decoding="async" />
               </ImageDialog>

@@ -14,6 +14,7 @@ function revalidatedPaths(feature: string): string[] {
 const EXPECTED: Record<string, string[]> = {
   team: ["/admin/team", "/about/team", "/about", "/", "/team/:slug"],
   partners: ["/admin/partners", "/", "/about", "/contact/book-consultation"],
+  testimonials: ["/admin/success-stories", "/", "/success-stories"],
   posts: ["/admin/posts", "/news", "/", "/news/:slug", "/news/category/[slug]", "/news/tag/[slug]"],
   events: ["/admin/events", "/events", "/", "/events/:slug"],
   institutions: [

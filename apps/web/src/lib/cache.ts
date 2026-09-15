@@ -6,6 +6,7 @@ export const TAGS = {
   offices: "offices",
   team: "team",
   partners: "partners",
+  successStories: "success-stories",
   posts: "posts",
   institutions: "institutions",
   courses: "courses",
