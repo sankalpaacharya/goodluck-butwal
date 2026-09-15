@@ -63,8 +63,9 @@ Names and where each one lives are in `apps/web/.env.example`. In short:
 - Never in a file, never in git.
 - Locally they all come from `apps/web/.env.local`, which git ignores.
 
-Notification addresses, social links and analytics ids live in the `settings` table, not here.
-Nothing in the admin edits them: a developer changes a row when the client asks.
+Notification addresses, social links and analytics ids live in the `settings` table, not here. A
+developer changes those rows when the client asks. The two exceptions are `google_rating` and
+`google_review_count`, which the admin edits under Settings.
 
 **`NEXT_PUBLIC_SENTRY_DSN`** is on the Sentry project under Settings, Client Keys. A DSN is
 write-only and meant to be public, which is why it carries the public prefix: the two error screens

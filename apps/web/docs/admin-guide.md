@@ -42,10 +42,15 @@ admin.
 | See and respond to enquiries | Enquiries | Your own office |
 | Confirm a consultation | Consultations, then Confirm | Your own office |
 | Download enquiries as a spreadsheet | Enquiries, then Export | Your own office |
+| Change the Google rating or the review count | Settings | Anyone |
 | Add a staff login or change a role | Users | Admin |
 
 Anything not in that table, page wording, services, destinations, office details, the announcement
 bar, is a developer change. Ask, and it goes out with the next release.
+
+The Google rating is two numbers typed by hand. Google charges for the feed that would keep them up
+to date, so open Settings and copy the score and the review count off the listing whenever they
+move.
 
 ## Who gets which role
 
