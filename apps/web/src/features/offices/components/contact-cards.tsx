@@ -24,16 +24,16 @@ export function OfficeContactCards({ offices, whatsappLabel }: { offices: Public
         return (
           <div
             key={o.id}
-            className={`flex flex-col gap-3 rounded-[10px] p-4 ring-1 ring-inset md:gap-4 md:rounded-[20px] md:p-5 ${dark ? "bg-ink text-white ring-ink" : "bg-white ring-hairline"}`}
+            className={`flex flex-col items-center gap-3 rounded-[10px] p-4 text-center ring-1 ring-inset md:gap-4 md:rounded-[20px] md:p-5 ${dark ? "bg-ink text-white ring-ink" : "bg-white ring-hairline"}`}
           >
             <div className="flex flex-col gap-[2px]">
               <p className={`t-small ${quiet}`}>{o.label}</p>
               <p className="text-[18px] font-semibold leading-[23.4px]">{o.city}, {o.country}</p>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col items-center gap-2">
               <Detail icon={MapPin} className={`t-base ${quiet}`}>{o.address}</Detail>
-              <div className="flex flex-col gap-2 md:flex-row md:flex-wrap md:items-center md:gap-x-6">
+              <div className="flex flex-col items-center gap-2 md:flex-row md:flex-wrap md:justify-center md:gap-x-6">
                 <Detail icon={Phone} className={link}>
                   <a href={o.tel}>{o.phone}</a>
                 </Detail>
