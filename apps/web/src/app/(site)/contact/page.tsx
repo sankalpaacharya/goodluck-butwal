@@ -60,11 +60,13 @@ export default async function ContactPage() {
                 <h1 className="t-h1-md">{t("contact.hero.title", "Don’t hesitate to contact us")}</h1>
                 <p className="t-body text-muted">{t("contact.hero.lead", "Let’s connect. Make a free consultation with our expert team.")}</p>
               </div>
-              <div className="flex flex-wrap items-center gap-5">
-                <FlatButton href={`mailto:${company.email}`}>{company.email}</FlatButton>
-                <SocialLinks />
+              <div className="flex w-full flex-col gap-4">
+                <div className="flex flex-wrap items-center gap-3 md:gap-4">
+                  <FlatButton href={`mailto:${company.email}`}>{company.email}</FlatButton>
+                  <SocialLinks />
+                </div>
+                <OfficeContactCards offices={offices} whatsappLabel={chatOnWhatsapp} />
               </div>
-              <OfficeContactCards offices={offices} whatsappLabel={chatOnWhatsapp} />
             </Appear>
             <Appear y={10} delay={0.1} duration={0.6} className="relative flex flex-col items-start gap-10 overflow-clip rounded-[10px] bg-surface p-5 pb-20 md:rounded-[30px] md:pb-[70px] lg:p-10 lg:pb-[120px]">
               <div className="relative z-[2] w-full"><EnquiryForm destinations={destinations} services={services} text={forms} /></div>
