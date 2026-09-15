@@ -8,6 +8,7 @@ import {
   mediaAssets,
   partners,
   posts,
+  reviews,
   successStories,
   teamMembers,
   testPrepCourses,
@@ -148,6 +149,11 @@ const REFERENCES: {
     kind: "Success story",
     findMany: (ids) =>
       db.select({ id: successStories.imageId, label: successStories.title }).from(successStories).where(inArray(successStories.imageId, ids)),
+  },
+  {
+    kind: "Client review",
+    findMany: (ids) =>
+      db.select({ id: reviews.avatarId, label: reviews.name }).from(reviews).where(inArray(reviews.avatarId, ids)),
   },
   {
     kind: "News banner",

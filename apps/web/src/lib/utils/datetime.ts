@@ -1,6 +1,11 @@
 export const formatDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
 
+// "Nov 2024", the way Google dates a review. Midday, so a date column never lands on the day
+// before in a zone behind UTC.
+export const formatMonth = (date: string) =>
+  new Date(`${date}T12:00:00`).toLocaleDateString("en-AU", { month: "short", year: "numeric" });
+
 // Timestamps are stored UTC and only mean anything next to an office, so the zone is named.
 export function formatInOfficeTz(
   value: Date | string,

@@ -4,13 +4,16 @@ import { revalidatePath } from "next/cache";
 import { TAGS, invalidate } from "@/lib/cache";
 import { eq } from "drizzle-orm";
 import { db } from "@goodluck/db";
-import { successStories } from "@goodluck/db/schema";
+import { reviews, successStories } from "@goodluck/db/schema";
 import { requireActor } from "@/lib/auth/session";
 import { can, requirePermission } from "@/lib/auth/rbac";
 import {
+  createReviewSchema,
   createSuccessStorySchema,
   successStoryPublishProblems,
+  updateReviewSchema,
   updateSuccessStorySchema,
+  type ReviewInput,
   type SuccessStoryInput,
 } from "@/features/testimonials/validators";
 
@@ -40,6 +43,24 @@ function refresh() {
   revalidatePath("/admin/success-stories");
   revalidatePath("/");
   revalidatePath("/success-stories");
+}
+
+function refreshReviews() {
+  invalidate(TAGS.reviews);
+  revalidatePath("/admin/reviews");
+  revalidatePath("/");
+  revalidatePath("/success-stories");
+}
+
+function reviewColumns(data: ReviewInput) {
+  return {
+    name: data.name,
+    avatarId: blank(data.avatarId),
+    reviewedOn: data.reviewedOn,
+    quote: data.quote,
+    isFeatured: data.isFeatured,
+    status: data.status,
+  };
 }
 
 export async function createSuccessStory(input: unknown): Promise<Result> {
@@ -124,5 +145,83 @@ export async function deleteSuccessStory(input: unknown): Promise<Result> {
   await db.delete(successStories).where(eq(successStories.id, existing.id));
 
   refresh();
+  return { ok: true, data: { id: existing.id } };
+}
+
+export async function createReview(input: unknown): Promise<Result> {
+  const actor = await requireActor();
+  requirePermission(actor, "reviews", "create");
+
+  const parsed = createReviewSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: "Check the fields below.", fieldErrors: parsed.error.flatten().fieldErrors };
+  }
+  const data = parsed.data;
+
+  if (data.status === "published" && !can(actor, "reviews", "publish")) {
+    return { ok: false, error: "Your role can save this review but not publish it." };
+  }
+
+  const [created] = await db
+    .insert(reviews)
+    .values({
+      ...reviewColumns(data),
+      publishedAt: data.status === "published" ? new Date() : null,
+      createdBy: actor.id,
+      updatedBy: actor.id,
+    })
+    .returning({ id: reviews.id });
+
+  refreshReviews();
+  return { ok: true, data: { id: created.id } };
+}
+
+export async function updateReview(input: unknown): Promise<Result> {
+  const actor = await requireActor();
+  requirePermission(actor, "reviews", "update");
+
+  const parsed = updateReviewSchema.safeParse(input);
+  if (!parsed.success) {
+    return { ok: false, error: "Check the fields below.", fieldErrors: parsed.error.flatten().fieldErrors };
+  }
+  const data = parsed.data;
+
+  const [existing] = await db
+    .select({ id: reviews.id, status: reviews.status, publishedAt: reviews.publishedAt })
+    .from(reviews)
+    .where(eq(reviews.id, data.id));
+  if (!existing) return { ok: false, error: "That review no longer exists." };
+
+  if (data.status !== existing.status && !can(actor, "reviews", "publish")) {
+    return { ok: false, error: "Your role can save this review but not change whether it is published." };
+  }
+
+  await db
+    .update(reviews)
+    .set({
+      ...reviewColumns(data),
+      publishedAt: data.status === "published" ? (existing.publishedAt ?? new Date()) : null,
+      updatedBy: actor.id,
+      updatedAt: new Date(),
+    })
+    .where(eq(reviews.id, data.id));
+
+  refreshReviews();
+  return { ok: true, data: { id: data.id } };
+}
+
+export async function deleteReview(input: unknown): Promise<Result> {
+  const actor = await requireActor();
+  requirePermission(actor, "reviews", "delete");
+
+  const parsed = updateReviewSchema.pick({ id: true }).safeParse(input);
+  if (!parsed.success) return { ok: false, error: "That review could not be found." };
+
+  const [existing] = await db.select({ id: reviews.id }).from(reviews).where(eq(reviews.id, parsed.data.id));
+  if (!existing) return { ok: false, error: "That review no longer exists." };
+
+  await db.delete(reviews).where(eq(reviews.id, existing.id));
+
+  refreshReviews();
   return { ok: true, data: { id: existing.id } };
 }

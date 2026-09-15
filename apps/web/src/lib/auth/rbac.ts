@@ -15,6 +15,7 @@ export type Entity =
   | "team"
   | "partners"
   | "successStories"
+  | "reviews"
   | "institutions"
   | "courses"
   | "courseCategories"
@@ -44,6 +45,7 @@ const MATRIX: Record<Entity, Record<UserRole, Action[]>> = {
   team: both(CRUDP),
   partners: both(CRUDP),
   successStories: both(CRUDP),
+  reviews: both(CRUDP),
   institutions: both(CRUDP),
   courses: both(CRUDP),
   courseCategories: both(CRUD),

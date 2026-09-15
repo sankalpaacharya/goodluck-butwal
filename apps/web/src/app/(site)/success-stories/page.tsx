@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { img } from "@/config/assets";
 import { getGoogleRating } from "@/features/settings/queries";
-import { reviews } from "@/features/testimonials/testimonials";
-import { listSuccessStories } from "@/features/testimonials/queries";
+import { listReviews, listSuccessStories } from "@/features/testimonials/queries";
 import { loadText } from "@/features/site-text/queries";
 import { Appear } from "@/components/ui/appear";
 import { PillButton } from "@/components/ui/button";
@@ -22,7 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function SuccessStoriesPage() {
-  const [googleRating, stories, t] = await Promise.all([getGoogleRating(), listSuccessStories(), loadText()]);
+  const [googleRating, stories, reviews, t] = await Promise.all([
+    getGoogleRating(),
+    listSuccessStories(),
+    listReviews(),
+    loadText(),
+  ]);
 
   return (
     <>
@@ -59,7 +63,7 @@ export default async function SuccessStoriesPage() {
             </div>
             <div className="grid w-full gap-5 md:grid-cols-2 md:gap-[30px] lg:grid-cols-3">
               {reviews.map((r, i) => (
-                <Appear key={r.name} delay={0.1 * (i % 3)}><ReviewCard r={r} className="h-full" /></Appear>
+                <Appear key={r.id} delay={0.1 * (i % 3)}><ReviewCard r={r} className="h-full" /></Appear>
               ))}
             </div>
           </div>

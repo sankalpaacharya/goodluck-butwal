@@ -1,6 +1,6 @@
 import { img } from "@/config/assets";
 import type { GoogleRating } from "@/features/settings/queries";
-import { reviews, type Review } from "@/features/testimonials/testimonials";
+import { listReviews, type Review } from "@/features/testimonials/queries";
 import { Appear } from "@/components/ui/appear";
 import { PillButton } from "@/components/ui/button";
 import { Badge, SectionBg } from "@/components/ui/bits";
@@ -37,7 +37,11 @@ function ReviewTile({ r, source, className = "w-[300px] md:w-[400px]" }: { r: Re
   return (
     <figure className={`flex flex-col gap-4 rounded-2xl border border-hairline bg-white p-5 ${className}`}>
       <div className="flex flex-wrap items-center gap-3">
-        <Img src={r.avatar} alt="" w={80} width={40} height={40} className="size-10 shrink-0 rounded-full bg-surface object-cover" loading="lazy" decoding="async" />
+        {r.avatar ? (
+          <Img src={r.avatar} alt="" w={80} width={40} height={40} className="size-10 shrink-0 rounded-full bg-surface object-cover" loading="lazy" decoding="async" />
+        ) : (
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-surface font-display text-[16px] font-semibold text-ink">{r.name[0]}</span>
+        )}
         <figcaption className="flex min-w-[150px] flex-1 flex-col gap-[2px]">
           <p className="text-[16px] font-medium leading-5 text-ink">{r.name}</p>
           <p className="t-small whitespace-nowrap text-muted">{source.replace("{date}", r.date)}</p>
@@ -53,9 +57,10 @@ function ReviewTile({ r, source, className = "w-[300px] md:w-[400px]" }: { r: Re
 
 
 export async function Reviews({ googleRating, values }: { googleRating: GoogleRating; values: string }) {
-  const t = await loadText();
+  const [reviews, t] = await Promise.all([listReviews(), loadText()]);
   const meta = metaFor(googleRating, t);
-  const rows = [reviews.slice(0, 3), reviews.slice(3)];
+  // Two rows of the same length, whatever the admin has published.
+  const rows = [reviews.slice(0, Math.ceil(reviews.length / 2)), reviews.slice(Math.ceil(reviews.length / 2))];
   return (
     <section id="why-goodluck" className="pb-section relative flex w-full flex-col items-center overflow-clip">
       <SectionBg src={img.testimonialBg} top bottom soft />
@@ -89,16 +94,20 @@ export async function Reviews({ googleRating, values }: { googleRating: GoogleRa
           </Appear>
         </div>
       </div>
-      <Appear delay={0.2} className="container-x relative z-[1] mt-[30px] flex flex-col gap-3 md:hidden">
-        {reviews.slice(0, 3).map((r) => <ReviewTile key={r.name} r={r} source={t("home.reviews.source", "Google review, {date}")} className="w-full" />)}
-      </Appear>
-      <Appear delay={0.2} className="relative z-[1] mt-[30px] hidden w-full flex-col gap-5 md:mt-10 md:flex lg:mt-[50px]">
-        {rows.map((row, i) => (
-          <Marquee key={i} pauseOnHover reverse={i === 0} className="p-0 [--duration:32s] [--gap:20px]">
-            {row.map((r) => <ReviewTile key={r.name} r={r} source={t("home.reviews.source", "Google review, {date}")} />)}
-          </Marquee>
-        ))}
-      </Appear>
+      {reviews.length > 0 && (
+        <>
+          <Appear delay={0.2} className="container-x relative z-[1] mt-[30px] flex flex-col gap-3 md:hidden">
+            {reviews.slice(0, 3).map((r) => <ReviewTile key={r.id} r={r} source={t("home.reviews.source", "Google review, {date}")} className="w-full" />)}
+          </Appear>
+          <Appear delay={0.2} className="relative z-[1] mt-[30px] hidden w-full flex-col gap-5 md:mt-10 md:flex lg:mt-[50px]">
+            {rows.filter((row) => row.length > 0).map((row, i) => (
+              <Marquee key={i} pauseOnHover reverse={i === 0} className="p-0 [--duration:32s] [--gap:20px]">
+                {row.map((r) => <ReviewTile key={r.id} r={r} source={t("home.reviews.source", "Google review, {date}")} />)}
+              </Marquee>
+            ))}
+          </Appear>
+        </>
+      )}
     </section>
   );
 }

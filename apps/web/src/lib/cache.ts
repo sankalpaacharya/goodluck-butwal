@@ -7,6 +7,7 @@ export const TAGS = {
   team: "team",
   partners: "partners",
   successStories: "success-stories",
+  reviews: "reviews",
   posts: "posts",
   institutions: "institutions",
   courses: "courses",
