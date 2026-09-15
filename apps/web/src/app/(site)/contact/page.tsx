@@ -60,7 +60,7 @@ export default async function ContactPage() {
               </div>
               <OfficeContactCards offices={offices} whatsappLabel={chatOnWhatsapp} />
             </Appear>
-            <Appear y={10} delay={0.1} duration={0.6} className="relative flex flex-col items-start gap-10 overflow-clip rounded-[10px] bg-surface p-5 md:rounded-[30px] lg:p-10">
+            <Appear y={10} delay={0.1} duration={0.6} className="relative flex flex-col items-start gap-10 self-start overflow-clip rounded-[10px] bg-surface p-5 md:rounded-[30px] lg:p-10">
               <div className="relative z-[2] w-full"><EnquiryForm destinations={destinations} services={services} text={forms} /></div>
             </Appear>
           </div>
