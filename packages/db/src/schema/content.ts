@@ -1,4 +1,4 @@
-import { boolean, index, jsonb, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, date, index, jsonb, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { base, mediaAssets, publishing, users } from "./core";
 import { contentStatus } from "./enums";
 
@@ -42,4 +42,21 @@ export const successStories = pgTable(
     isFeatured: boolean("is_featured").notNull().default(false),
   },
   (t) => [index("success_stories_status_featured_idx").on(t.status, t.isFeatured, t.publishedAt)],
+);
+
+// A review Google already carries. reviewedOn is the month Google prints under the name, so the
+// day is never shown and never matters.
+export const reviews = pgTable(
+  "reviews",
+  {
+    ...base,
+    status: contentStatus("status").notNull().default("draft"),
+    publishedAt: timestamp("published_at", { withTimezone: true }),
+    name: text("name").notNull(),
+    avatarId: uuid("avatar_id").references(() => mediaAssets.id),
+    reviewedOn: date("reviewed_on").notNull(),
+    quote: text("quote").notNull(),
+    isFeatured: boolean("is_featured").notNull().default(false),
+  },
+  (t) => [index("reviews_status_featured_idx").on(t.status, t.isFeatured, t.reviewedOn)],
 );
