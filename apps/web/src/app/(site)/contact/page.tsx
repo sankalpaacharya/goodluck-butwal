@@ -92,15 +92,9 @@ export default async function ContactPage() {
                       <div className="flex flex-col items-start gap-[6px]">
                         <p className={`t-small ${white ? "text-white/70" : "text-muted"}`}>{o.label}</p>
                         <h3 className={`t-h4 ${white ? "!text-white" : ""}`}>{o.city}, {o.country}</h3>
-                        <p className={`t-base ${t === "dark" ? "text-gray-text" : t === "blue" ? "text-hairline" : "text-muted"}`}>{o.address}</p>
-                        {o.hours && <p className={`t-base ${white ? "text-white/70" : "text-muted"}`}>{o.hours}</p>}
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-x-5 gap-y-2">
-                      <a href={o.tel} className={`t-base font-semibold underline underline-offset-4 ${white ? "text-white" : "text-ink"}`}>{o.phone}</a>
-                      {o.whatsapp && (
-                        <a href={o.whatsapp} target="_blank" rel="noopener" className={`t-base font-semibold underline underline-offset-4 ${white ? "text-white" : "text-ink"}`}>{chatOnWhatsapp}</a>
-                      )}
                       <a href={`https://www.google.com/maps/search/?api=1&query=${mapQuery}`} target="_blank" rel="noopener" className={`t-base font-semibold underline underline-offset-4 ${white ? "text-white" : "text-ink"}`}>{openInMaps}</a>
                     </div>
                     <div className="w-full overflow-clip rounded-[10px] md:rounded-[20px]">
