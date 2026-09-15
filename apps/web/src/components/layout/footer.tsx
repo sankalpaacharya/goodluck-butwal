@@ -83,7 +83,7 @@ export function Footer({ columns, socials, text }: { columns: FooterColumn[]; so
         alt=""
         aria-hidden
         sizes="min(94vw, 1320px)"
-        className="relative z-[1] -mb-[2px] mt-[50px] w-[min(94vw,1320px)] opacity-80 brightness-0 invert select-none md:mt-[70px]" loading="lazy" decoding="async" />
+        className="relative z-[1] -mb-[2px] mt-[50px] w-[min(94vw,1320px)] opacity-80 select-none md:mt-[70px]" loading="lazy" decoding="async" />
     </footer>
   );
 }
