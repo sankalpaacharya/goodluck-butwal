@@ -78,6 +78,13 @@
       "when": 1789700000000,
       "tag": "0010_migration_guidance",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1789800000000,
+      "tag": "0011_office_socials",
+      "breakpoints": true
     }
   ]
 }

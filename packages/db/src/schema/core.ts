@@ -84,6 +84,10 @@ export const verifications = pgTable("verifications", {
 
 type OpeningHours = { day: number; open: string; close: string; closed: boolean }[];
 
+// The same shape as the site-wide social_links setting, so one office can point at its own
+// accounts while another falls back to nothing.
+type SocialLink = { label: string; href: string; icon: string };
+
 export const offices = pgTable("offices", {
   ...base,
   ...publishing,
@@ -104,6 +108,7 @@ export const offices = pgTable("offices", {
   mapsUrl: text("maps_url"),
   mapsEmbedUrl: text("maps_embed_url"),
   openingHours: jsonb("opening_hours").$type<OpeningHours>(),
+  socialLinks: jsonb("social_links").$type<SocialLink[]>(),
   profileHtml: text("profile_html"),
   credentialsHtml: text("credentials_html"),
   isActive: boolean("is_active").notNull().default(true),
