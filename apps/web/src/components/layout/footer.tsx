@@ -78,12 +78,16 @@ export function Footer({ columns, socials, text }: { columns: FooterColumn[]; so
           <p className="t-base text-ink">{offices.find((o) => o.hours)?.hours}</p>
         </div>
       </div>
+      {/* The intrinsic size is spelled out: with no height to reserve, the wordmark sat 2px past
+          the end of the page, never met the viewport, and so never loaded at all. */}
       <Img
         src={gl.logo}
         alt=""
         aria-hidden
+        width={1959}
+        height={539}
         sizes="min(94vw, 1320px)"
-        className="relative z-[1] -mb-[2px] mt-[50px] w-[min(94vw,1320px)] opacity-80 select-none md:mt-[70px]" loading="lazy" decoding="async" />
+        className="relative z-[1] -mb-[2px] mt-[50px] h-auto w-[min(94vw,1320px)] opacity-80 select-none md:mt-[70px]" loading="lazy" decoding="async" />
     </footer>
   );
 }
