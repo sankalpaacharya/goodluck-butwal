@@ -25,7 +25,7 @@ test("the big footer wordmark declares its intrinsic size", () => {
   expect(wordmark).toContain('height="539"');
 });
 
-test("it is the brand artwork, not a white silhouette", () => {
-  expect(wordmark).not.toContain("brightness-0");
-  expect(wordmark).not.toContain("invert");
+test("it is the white treatment the footer was designed around", () => {
+  expect(wordmark).toContain("brightness-0");
+  expect(wordmark).toContain("invert");
 });
