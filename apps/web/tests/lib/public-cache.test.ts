@@ -44,10 +44,16 @@ describe("layout globals", () => {
     expect(source).toContain(`TAGS.${tagKey}`);
   });
 
-  // These three are developer-controlled: no admin edits them, so nothing purges their tag and
+  // These two are developer-controlled: no admin edits them, so nothing purges their tag and
   // the hourly backstop in cached() is what picks a deployed change up.
-  test.each(["site-text", "settings", "offices"])("%s has no admin mutation", (feature) => {
+  test.each(["site-text", "offices"])("%s has no admin mutation", (feature) => {
     expect(existsSync(`src/features/${feature}/actions.ts`)).toBe(false);
+  });
+
+  // The Google rating is the one settings row the admin edits, so that save has to purge the tag
+  // the whole settings table is cached under.
+  test("saving the google rating purges the settings tag", () => {
+    expect(read("src/features/settings/actions.ts")).toContain("invalidate(TAGS.settings)");
   });
 
   test("a cached read always carries a backstop, so a developer change lands without a purge", () => {

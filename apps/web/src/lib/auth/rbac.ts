@@ -28,6 +28,7 @@ export type Entity =
   | "consultations"
   | "registrations"
   | "media"
+  | "settings"
   | "users";
 
 const CRUD: Action[] = ["create", "read", "update", "delete"];
@@ -56,6 +57,7 @@ const MATRIX: Record<Entity, Record<UserRole, Action[]>> = {
   consultations: both(HANDLE),
   registrations: both(HANDLE),
   media: both(CRUD),
+  settings: both(["read", "update"]),
   users: { admin: CRUD, member: NONE },
 };
 
