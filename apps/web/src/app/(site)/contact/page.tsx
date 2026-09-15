@@ -2,11 +2,9 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 import { localBusiness } from "@/lib/seo/schema";
-import { gl, img } from "@/config/assets";
-import { company } from "@/config/site";
+import { img } from "@/config/assets";
 import { Appear } from "@/components/ui/appear";
-import { FlatButton } from "@/components/ui/button";
-import { Badge, SocialLinks } from "@/components/ui/bits";
+import { Badge } from "@/components/ui/bits";
 import { SectionHead } from "@/components/shared/inner";
 import { EnquiryForm } from "@/features/leads/components/forms";
 import { OfficeContactCards } from "@/features/offices/components/contact-cards";
@@ -60,17 +58,10 @@ export default async function ContactPage() {
                 <h1 className="t-h1-md">{t("contact.hero.title", "Don’t hesitate to contact us")}</h1>
                 <p className="t-body text-muted">{t("contact.hero.lead", "Let’s connect. Make a free consultation with our expert team.")}</p>
               </div>
-              <div className="flex w-full flex-col gap-4">
-                <div className="flex flex-wrap items-center gap-3 md:gap-4">
-                  <FlatButton href={`mailto:${company.email}`}>{company.email}</FlatButton>
-                  <SocialLinks />
-                </div>
-                <OfficeContactCards offices={offices} whatsappLabel={chatOnWhatsapp} />
-              </div>
+              <OfficeContactCards offices={offices} whatsappLabel={chatOnWhatsapp} />
             </Appear>
-            <Appear y={10} delay={0.1} duration={0.6} className="relative flex flex-col items-start gap-10 overflow-clip rounded-[10px] bg-surface p-5 pb-20 md:rounded-[30px] md:pb-[70px] lg:p-10 lg:pb-[120px]">
+            <Appear y={10} delay={0.1} duration={0.6} className="relative flex flex-col items-start gap-10 overflow-clip rounded-[10px] bg-surface p-5 md:rounded-[30px] lg:p-10">
               <div className="relative z-[2] w-full"><EnquiryForm destinations={destinations} services={services} text={forms} /></div>
-              <Img aria-hidden src={gl.campus} alt="" sizes="100vw" className="pointer-events-none absolute -left-[10px] -right-[10px] bottom-[-20px] z-[1] w-[calc(100%+20px)] max-w-none object-contain object-top" loading="lazy" decoding="async" />
             </Appear>
           </div>
         </div>
