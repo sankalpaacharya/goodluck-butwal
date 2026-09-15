@@ -12,12 +12,14 @@ export type PublicOffice = {
   city: string;
   label: string;
   address: string;
+  email: string;
   phone: string;
   tel: string;
   whatsapp?: string;
   timezone: string;
   flag: string;
   hours?: string;
+  socials: { label: string; href: string; icon: string }[];
 };
 
 // wa.me takes digits only, so the + and any spacing in the stored number have to go.
@@ -34,6 +36,8 @@ const officeRows = cached(async (): Promise<PublicOffice[]> => {
       city: offices.city,
       label: offices.name,
       address: offices.addressLine1,
+      email: offices.email,
+      socials: offices.socialLinks,
       phoneDisplay: offices.phoneDisplay,
       phone: offices.phone,
       whatsapp: offices.whatsapp,
@@ -50,12 +54,14 @@ const officeRows = cached(async (): Promise<PublicOffice[]> => {
     city: row.city ?? "",
     label: row.label,
     address: row.address ?? "",
+    email: row.email ?? "",
     phone: row.phoneDisplay ?? "",
     tel: `tel:${row.phone ?? ""}`,
     whatsapp: whatsappLink(row.whatsapp),
     timezone: row.timezone,
     flag: `/images/flags/${row.country.toLowerCase().replace(/\s+/g, "-")}.svg`,
     hours: formatOpeningHours(row.openingHours) ?? undefined,
+    socials: (row.socials ?? []).filter((link) => link.href),
   }));
 }, ["offices"], [TAGS.offices]);
 
@@ -88,6 +94,7 @@ export const listOfficeProfiles = cache(async (): Promise<OfficeProfile[]> => {
       phone: offices.phone,
       whatsapp: offices.whatsapp,
       email: offices.email,
+      socials: offices.socialLinks,
       timezone: offices.timezone,
       mapsUrl: offices.mapsUrl,
       mapsEmbedUrl: offices.mapsEmbedUrl,
@@ -113,6 +120,7 @@ export const listOfficeProfiles = cache(async (): Promise<OfficeProfile[]> => {
     timezone: row.timezone,
     flag: `/images/flags/${row.country.toLowerCase().replace(/\s+/g, "-")}.svg`,
     hours: formatOpeningHours(row.openingHours) ?? undefined,
+    socials: (row.socials ?? []).filter((link) => link.href),
     mapsUrl: row.mapsUrl,
     mapsEmbedUrl: row.mapsEmbedUrl,
     openingHours: row.openingHours ?? null,

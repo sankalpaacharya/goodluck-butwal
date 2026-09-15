@@ -9,6 +9,8 @@ const office = (id: PublicOffice["id"], city: string, country: string): PublicOf
   city,
   country,
   address: `1 ${city} Street`,
+  email: `${city.toLowerCase()}@example.com`,
+  socials: [{ label: "TikTok", href: "#", icon: "/images/social/tiktok.webp" }],
   phone: "000",
   tel: "tel:000",
   timezone: "Australia/Melbourne",

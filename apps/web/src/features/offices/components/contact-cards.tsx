@@ -1,4 +1,5 @@
 import type { PublicOffice } from "@/features/offices/queries";
+import { SocialLinks } from "@/components/ui/bits";
 
 // Fixed order, head office first and dark. Deliberately not the visitor's own office: this block
 // is the whole contact list, so everyone sees the same three in the same order.
@@ -15,7 +16,11 @@ export function OfficeContactCards({ offices, whatsappLabel }: { offices: Public
             {o.whatsapp && (
               <a href={o.whatsapp} target="_blank" rel="noopener" className={`t-base font-semibold underline underline-offset-4 ${i === 0 ? "text-white" : "text-ink"}`}>{whatsappLabel}</a>
             )}
+            {o.email && (
+              <a href={`mailto:${o.email}`} className={`t-base font-semibold underline underline-offset-4 ${i === 0 ? "text-white" : "text-ink"}`}>{o.email}</a>
+            )}
           </div>
+          {o.socials.length > 0 && <SocialLinks links={o.socials} className={`pt-1 ${i === 0 ? "[&>a]:ring-white/20" : ""}`} />}
         </div>
       ))}
     </div>
