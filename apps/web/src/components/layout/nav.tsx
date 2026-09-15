@@ -6,7 +6,7 @@ import { Fragment, useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { gl } from "@/config/assets";
 import { nav, type NavIcon } from "@/config/site";
-import { BookOpen, Building2, Globe, PenLine } from "lucide-react";
+import { BookOpen, Building2, CalendarDays, Globe, PenLine } from "lucide-react";
 import { PillButton } from "@/components/ui/button";
 import { Img } from "@/components/ui/img";
 
@@ -32,7 +32,7 @@ function BlurTop() {
   );
 }
 
-const icons: Record<NavIcon, typeof Globe> = { globe: Globe, building: Building2, book: BookOpen, pen: PenLine };
+const icons: Record<NavIcon, typeof Globe> = { globe: Globe, building: Building2, book: BookOpen, pen: PenLine, calendar: CalendarDays };
 
 export type NavText = { bookCta: string; menuOpen: string; menuClose: string };
 

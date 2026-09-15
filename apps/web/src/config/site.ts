@@ -71,7 +71,7 @@ export const social = [
 // menuOnly: listed in the mobile menu but kept out of the header bar so it stays readable.
 // A group has no page of its own: in the header it is a dropdown of icon tiles, in the mobile
 // menu a heading over an indented list.
-export type NavIcon = "globe" | "building" | "book" | "pen";
+export type NavIcon = "globe" | "building" | "book" | "pen" | "calendar";
 export type NavChild = { label: string; href: string; icon: NavIcon };
 export type NavItem = { label: string; href: string; menuOnly?: boolean } | { label: string; children: NavChild[] };
 
@@ -84,11 +84,11 @@ export const nav: NavItem[] = [
       { label: "Institutions", href: "/institutions", icon: "building" },
       { label: "Courses", href: "/courses", icon: "book" },
       { label: "Test preparation", href: "/test-preparation", icon: "pen" },
+      { label: "Events", href: "/events", icon: "calendar" },
     ],
   },
   { label: "Services", href: "/services" },
   { label: "News", href: "/news" },
-  { label: "Events", href: "/events", menuOnly: true },
   { label: "Contact", href: "/contact" },
   { label: "Search", href: "/search", menuOnly: true },
 ];

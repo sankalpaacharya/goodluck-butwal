@@ -49,10 +49,10 @@ test("each blur layer is clipped to its mask band plus the blur's reach", () => 
   expect(clips[5]).toBe("0 0 calc(87.5% - 40px) 0");
 });
 
-// The Study abroad group holds the destination, institution, course and test preparation pages.
-// On one of those the group has to read as the current section, or the site looks lost.
-test("a dropdown group is highlighted while on one of its child pages", () => {
-  pathname.mockReturnValue("/courses");
+// The Study abroad group holds the destination, institution, course, test preparation and event
+// pages. On one of those the group has to read as the current section, or the site looks lost.
+test.each(["/courses", "/events"])("a dropdown group is highlighted while on %s", (path) => {
+  pathname.mockReturnValue(path);
   const html = renderToStaticMarkup(createElement(Nav, { text }));
   expect(html).toMatch(/<button type="button" aria-haspopup="true"[^>]*class="[^"]* bg-surface text-ink[^>]*>Study abroad/);
   expect(html).not.toMatch(/<a href="\/services"[^>]*class="[^"]* bg-surface text-ink/);
