@@ -1,8 +1,8 @@
 # Running the site
 
-Seven parts of this site are edited in the admin, at `/admin`: Team, Partners, News, Events,
-Institutions, Courses and Test preparation. Enquiries and Consultations are there too, so you can
-see and answer what comes in.
+Eight parts of this site are edited in the admin, at `/admin`: Team, Partners, Success stories,
+News, Events, Institutions, Courses and Test preparation. Enquiries and Consultations are there
+too, so you can see and answer what comes in.
 
 Everything else on the site, page wording, service descriptions, destination pages, office
 details, is set by a developer. That is deliberate. It is the part of the site that is not meant
@@ -28,6 +28,7 @@ admin.
 |---|---|---|
 | Add a staff member, change a bio or photo | Team | Your own office |
 | Add a partner logo to the ticker | Partners | Anyone |
+| Add a visa grant graphic, or move one to the front | Success stories | Anyone |
 | Publish a news article | News. Editors can write but not publish. | Any admin |
 | Sort articles into categories or tags | News, at the foot of the list | Any admin |
 | Add an event and open registrations | Events | Your own office |
