@@ -48,9 +48,9 @@ export default async function ServicePage({ params }: Props) {
         <div className="container-x">
           <div className="flex flex-col items-center gap-[30px] md:gap-10 lg:gap-[50px]">
             <SectionHead badge={t("services.detail.steps.badge", "How it works")} title={s.stepsTitle} />
-            <div className="grid w-full gap-5 md:grid-cols-2 md:gap-[30px] lg:grid-cols-3">
+            <div className="flex w-full flex-wrap justify-center gap-5 md:gap-[30px]">
               {s.steps.map((st, i) => (
-                <InfoCard key={st.title} label={String(i + 1).padStart(2, "0")} title={st.title} line={st.line} tone={i % 4 === 3 ? "dark" : "surface"} delay={0.1 * (i % 3)} className="min-h-[200px] justify-between" />
+                <InfoCard key={st.title} label={String(i + 1).padStart(2, "0")} title={st.title} line={st.line} tone={i % 4 === 3 ? "dark" : "surface"} delay={0.1 * (i % 3)} className="min-h-[200px] w-full justify-between md:w-[calc((100%-30px)/2)] lg:w-[calc((100%-60px)/3)]" />
               ))}
             </div>
           </div>
