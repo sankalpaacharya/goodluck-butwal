@@ -1,5 +1,6 @@
-import { boolean, index, jsonb, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
-import { base, publishing, users } from "./core";
+import { boolean, index, jsonb, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { base, mediaAssets, publishing, users } from "./core";
+import { contentStatus } from "./enums";
 
 export const pages = pgTable("pages", {
   ...base,
@@ -26,4 +27,19 @@ export const uiStrings = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   },
   (t) => [index("ui_strings_group_idx").on(t.group)],
+);
+
+// The graphic carries its own words, so the title is both the admin label and the alt text.
+// Featured stories lead, then the most recently published.
+export const successStories = pgTable(
+  "success_stories",
+  {
+    ...base,
+    status: contentStatus("status").notNull().default("draft"),
+    publishedAt: timestamp("published_at", { withTimezone: true }),
+    title: text("title").notNull(),
+    imageId: uuid("image_id").references(() => mediaAssets.id),
+    isFeatured: boolean("is_featured").notNull().default(false),
+  },
+  (t) => [index("success_stories_status_featured_idx").on(t.status, t.isFeatured, t.publishedAt)],
 );
