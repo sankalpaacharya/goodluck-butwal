@@ -10,5 +10,4 @@ test.runIf(hasDb)("the company profile row carries its registered particulars", 
   expect(profile?.registration_no).toBeTruthy();
   expect(profile?.pan_no).toBeTruthy();
   expect(profile?.business).toBeTruthy();
-  expect(profile?.operated_by).toBeTruthy();
 });

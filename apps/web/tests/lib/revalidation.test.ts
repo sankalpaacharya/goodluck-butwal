@@ -16,6 +16,7 @@ const EXPECTED: Record<string, string[]> = {
   partners: ["/admin/partners", "/", "/about", "/contact/book-consultation"],
   testimonials: ["/admin/success-stories", "/admin/reviews", "/", "/success-stories"],
   settings: ["/admin/settings", "/", "/about", "/success-stories"],
+  pages: ["/admin/company-profile", "/company-profile"],
   posts: ["/admin/posts", "/news", "/", "/news/:slug", "/news/category/[slug]", "/news/tag/[slug]"],
   events: ["/admin/events", "/events", "/", "/events/:slug"],
   institutions: [
