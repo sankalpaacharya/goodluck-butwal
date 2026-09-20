@@ -78,16 +78,19 @@ export function Footer({ columns, socials, text }: { columns: FooterColumn[]; so
           <p className="t-base text-ink">{offices.find((o) => o.hours)?.hours}</p>
         </div>
       </div>
-      {/* The intrinsic size is spelled out: with no height to reserve, the wordmark sat 2px past
-          the end of the page, never met the viewport, and so never loaded at all. */}
-      <Img
-        src={gl.logo}
-        alt=""
-        aria-hidden
-        width={1959}
-        height={539}
-        sizes="min(94vw, 1320px)"
-        className="relative z-[1] -mb-[2px] mt-[50px] h-auto w-[min(94vw,1320px)] opacity-80 brightness-0 invert select-none md:mt-[70px]" loading="lazy" decoding="async" />
+      {/* The logo file carries "education and migration" under the wordmark; the box crops it off
+          at 321 of the 539 rows. The intrinsic size is spelled out: with no height to reserve, the
+          wordmark sat 2px past the end of the page, never met the viewport, and so never loaded. */}
+      <div className="relative z-[1] -mb-[2px] mt-[50px] aspect-[1959/321] w-[min(94vw,1320px)] overflow-hidden md:mt-[70px]">
+        <Img
+          src={gl.logo}
+          alt=""
+          aria-hidden
+          width={1959}
+          height={539}
+          sizes="min(94vw, 1320px)"
+          className="h-auto w-full opacity-80 brightness-0 invert select-none" loading="lazy" decoding="async" />
+      </div>
     </footer>
   );
 }
