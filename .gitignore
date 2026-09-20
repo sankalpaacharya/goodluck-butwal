@@ -2,3 +2,4 @@ extras/
 designs/
 node_modules
 *.tsbuildinfo
+.github/workflows/backup.yml

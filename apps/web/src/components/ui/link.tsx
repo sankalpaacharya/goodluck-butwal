@@ -2,7 +2,7 @@
 
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useSyncExternalStore, type ComponentProps, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useSyncExternalStore, type ComponentProps, type ReactNode } from "react";
 
 type Connection = {
   saveData?: boolean;
@@ -27,6 +27,11 @@ const Slow = createContext(false);
 // matches the HTML; on a slow connection the links re-render once after hydration.
 export function SlowConnectionProvider({ children }: { children: ReactNode }) {
   const slow = useSyncExternalStore(subscribe, () => slowConnection(connection()), () => false);
+
+  useEffect(() => {
+    document.documentElement.toggleAttribute("data-slow-connection", slow);
+  }, [slow]);
+
   return <Slow.Provider value={slow}>{children}</Slow.Provider>;
 }
 

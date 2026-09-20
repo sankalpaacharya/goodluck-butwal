@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, m } from "framer-motion";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { m } from "framer-motion";
 
 import type { PublicMember } from "@/features/team/queries";
 import { Appear } from "@/components/ui/appear";
@@ -19,33 +19,51 @@ const ctaText: FaqCtaText = {
   you: "You",
 };
 
-export function Accordion({ items, defaultOpen = 0, variant = "surface" }: { items: FaqItem[]; defaultOpen?: number | null; variant?: "surface" | "white" }) {
-  const [open, setOpen] = useState<number | null>(defaultOpen);
+const panelSpring = { type: "spring", bounce: 0, duration: 0.5 } as const;
+
+// One panel opens at a time, so room for the longest answer is room for any of them. The spacer
+// gives that room back as a panel takes it, which is what keeps the footer still.
+export function Accordion({ items, variant = "surface" }: { items: FaqItem[]; variant?: "surface" | "white" }) {
+  const [open, setOpen] = useState<number | null>(null);
+  const [heights, setHeights] = useState<number[]>([]);
+  const answers = useRef<(HTMLParagraphElement | null)[]>([]);
+
+  // The paragraph keeps its height inside the collapsed box, so a closed answer still measures.
+  const measure = useCallback(() => setHeights(answers.current.map((el) => el?.offsetHeight ?? 0)), []);
+  useLayoutEffect(() => {
+    measure();
+    const observer = new ResizeObserver(measure);
+    for (const el of answers.current) if (el) observer.observe(el);
+    return () => observer.disconnect();
+  }, [measure, items]);
+
+  const tallest = heights.length ? Math.max(...heights) : 0;
+  const reserved = Math.max(0, tallest - (open === null ? 0 : (heights[open] ?? 0)));
+
   return (
-    <div className="flex w-full flex-col items-start gap-4 md:gap-5">
-      {items.map(({ q, a }, i) => {
-        const isOpen = open === i;
-        return (
-          <div key={q} className={`flex w-full flex-col justify-center overflow-hidden rounded-[10px] ring-1 ring-inset transition-colors duration-300 md:rounded-[20px] ${variant === "white" ? `ring-black/20 ${isOpen ? "bg-white" : "bg-transparent"}` : `ring-hairline ${isOpen ? "bg-surface" : "bg-transparent"}`}`}>
-            <button type="button" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="flex w-full items-start gap-[10px] py-3 pl-5 pr-3 text-left md:p-5">
-              <span className="flex min-h-[30px] flex-1 items-center">
-                <span className="text-[18px] font-medium leading-[23.4px] text-ink md:text-[20px] md:leading-[26px]">{q}</span>
-              </span>
-              <m.span animate={{ rotate: isOpen ? 90 : 0, backgroundColor: isOpen ? "#1d1d1d" : variant === "white" ? "#ffffff" : "#edf1f4" }} transition={{ duration: 0.3 }} className="relative flex size-[26px] shrink-0 items-center justify-center rounded-full md:size-[30px]">
-                <m.span animate={{ opacity: isOpen ? 0 : 1, backgroundColor: isOpen ? "#ffffff" : "#1d1d1d" }} className="absolute h-[2px] w-4 rounded-full" />
-                <m.span animate={{ backgroundColor: isOpen ? "#ffffff" : "#1d1d1d" }} className="absolute h-4 w-[2px] rounded-full" />
-              </m.span>
-            </button>
-            <AnimatePresence initial={false}>
-              {isOpen && (
-                <m.div key="a" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ type: "spring", bounce: 0, duration: 0.5 }} className="overflow-hidden">
-                  <p className="t-base pb-5 pl-5 pr-[60px] text-muted">{a}</p>
-                </m.div>
-              )}
-            </AnimatePresence>
-          </div>
-        );
-      })}
+    <div className="w-full">
+      <div className="flex w-full flex-col items-start gap-4 md:gap-5">
+        {items.map(({ q, a }, i) => {
+          const isOpen = open === i;
+          return (
+            <div key={q} className={`flex w-full flex-col justify-center overflow-hidden rounded-[10px] ring-1 ring-inset transition-colors duration-300 md:rounded-[20px] ${variant === "white" ? `ring-black/20 ${isOpen ? "bg-white" : "bg-transparent"}` : `ring-hairline ${isOpen ? "bg-surface" : "bg-transparent"}`}`}>
+              <button type="button" onClick={() => setOpen(isOpen ? null : i)} aria-expanded={isOpen} className="flex w-full items-start gap-[10px] py-3 pl-5 pr-3 text-left md:p-5">
+                <span className="flex min-h-[30px] flex-1 items-center">
+                  <span className="text-[18px] font-medium leading-[23.4px] text-ink md:text-[20px] md:leading-[26px]">{q}</span>
+                </span>
+                <m.span animate={{ rotate: isOpen ? 90 : 0, backgroundColor: isOpen ? "#1d1d1d" : variant === "white" ? "#ffffff" : "#edf1f4" }} transition={{ duration: 0.3 }} className="relative flex size-[26px] shrink-0 items-center justify-center rounded-full md:size-[30px]">
+                  <m.span animate={{ opacity: isOpen ? 0 : 1, backgroundColor: isOpen ? "#ffffff" : "#1d1d1d" }} className="absolute h-[2px] w-4 rounded-full" />
+                  <m.span animate={{ backgroundColor: isOpen ? "#ffffff" : "#1d1d1d" }} className="absolute h-4 w-[2px] rounded-full" />
+                </m.span>
+              </button>
+              <m.div initial={false} animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }} transition={panelSpring} className="overflow-hidden">
+                <p ref={(el) => { answers.current[i] = el; }} className="t-base pb-5 pl-5 pr-[60px] text-muted">{a}</p>
+              </m.div>
+            </div>
+          );
+        })}
+      </div>
+      <m.div aria-hidden initial={false} animate={{ height: reserved }} transition={panelSpring} />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { PillButton } from "@/components/ui/button";
 import { Badge, SectionBg, Ticker } from "@/components/ui/bits";
 import { loadText } from "@/features/site-text/queries";
 import { Img } from "@/components/ui/img";
+import { Stars5 } from "@/components/ui/icons";
 import { ImageDialog } from "@/components/ui/image-dialog";
 
 // The success-story graphics carry their own text, so each sits on a plain white plate and nothing else is added.
@@ -40,7 +41,7 @@ export async function Stories({ googleRating }: { googleRating: GoogleRating }) 
             <div className="flex items-center gap-4 rounded-[20px] bg-white p-4 ring-1 ring-hairline md:gap-5 md:rounded-[24px] md:p-5">
               <span className="t-stat">{googleRating.score}</span>
               <div className="flex flex-col gap-[6px]">
-                <Img src={img.stars5} alt="Five stars" className="h-[16px] w-[97px]" loading="lazy" decoding="async" />
+                <Stars5 role="img" aria-label="Five stars" className="h-[16px] w-[97px]" />
                 <p className="t-small text-muted">{t("home.stories.rating", "from {count} Google reviews").replace("{count}", String(googleRating.count))}</p>
               </div>
             </div>

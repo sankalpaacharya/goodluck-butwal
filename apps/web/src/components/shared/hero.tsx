@@ -7,13 +7,13 @@ import { gl, img } from "@/config/assets";
 import type { GoogleRating } from "@/features/settings/queries";
 import { Appear } from "@/components/ui/appear";
 import { FlatButton, PillButton } from "@/components/ui/button";
-import { Img } from "@/components/ui/img";
+import { BLANK, Img } from "@/components/ui/img";
+import { Bolt, Stars5 } from "@/components/ui/icons";
 import { assetSrcSet, assetUrl, type Format, IMAGE_WIDTHS, type Quality, WIDE_IMAGE_WIDTHS } from "@/lib/utils/media-url";
 
 const PHONE = "(max-width: 809px)";
 const PHONE_SKY: [Quality, Format] = ["eco", "avif"];
 
-const BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 const destinationFlags = [
   { name: "Australia", flag: "/images/flags/australia.svg" },
@@ -105,13 +105,13 @@ export function Hero({
           </Appear>
           <Appear y={20} delay={0.6} className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[15px] font-medium leading-[18px] text-muted">
             <span className="flex items-center gap-2">
-              <Img src={img.stars5} alt="" className="h-[14px] w-auto" />
+              <Stars5 aria-hidden className="h-[14px] w-auto" />
               <span className="font-semibold text-ink">{googleRating.score}</span>
               <span>from {googleRating.count} Google reviews</span>
             </span>
             <span aria-hidden className="hidden size-1 rounded-full bg-ink/30 md:block" />
             <span className="flex items-center gap-[6px]">
-              <Img src={img.bolt} alt="" className="h-[14px] w-auto" />
+              <Bolt className="h-[14px] w-auto" />
               <span>
                 Since <span className="font-semibold text-ink">2022</span>
               </span>

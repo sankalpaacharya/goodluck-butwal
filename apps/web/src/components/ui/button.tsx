@@ -4,8 +4,7 @@ import { Link } from "@/components/ui/link";
 import { m } from "framer-motion";
 import type { ReactNode } from "react";
 import type { Variants } from "framer-motion";
-import { img } from "@/config/assets";
-import { Img } from "@/components/ui/img";
+import { Arrow, ArrowLeft } from "@/components/ui/icons";
 
 const spring = { type: "spring", stiffness: 380, damping: 32 } as const;
 const cx = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(" ");
@@ -25,7 +24,7 @@ function ArrowChip({ side, lg, flip, variants }: { side: "left" | "right"; lg: b
         side === "left" ? (lg ? "left-[6px] lg:left-2" : "left-[7px] lg:left-2") : lg ? "right-[6px] lg:right-2" : "right-[7px] lg:right-2",
       )}
     >
-      <Img src={flip ? img.arrowLeft : img.arrow} alt="" w={24} className="h-2 w-3" loading="lazy" decoding="async" />
+      {flip ? <ArrowLeft className="h-2 w-3" /> : <Arrow className="h-2 w-3" />}
     </m.span>
   );
 }

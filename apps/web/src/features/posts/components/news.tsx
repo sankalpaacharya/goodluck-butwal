@@ -9,7 +9,7 @@ export async function News({ articles }: { articles: PublicArticle[] }) {
   const t = await loadText();
   const latest = [...articles].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 3);
   return (
-    <section id="news" className="pb-section flex w-full flex-col items-center">
+    <section id="news" className="pb-section flex w-full flex-col items-center [contain-intrinsic-size:auto_900px] [content-visibility:auto]">
       <div className="container-x">
         <div className="flex flex-col items-start gap-[30px] md:gap-10 lg:gap-[50px]">
           <div className="flex w-full flex-col gap-[10px] md:flex-row md:items-end md:gap-[30px] lg:gap-[50px]">

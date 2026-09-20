@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { assetId, assetSrcSet, assetUrl, mediaUrl, videoStreamUrl, videoUrl } from "@/lib/utils/media-url";
+import { MEDIA_ORIGIN, assetId, assetSrcSet, assetUrl, mediaUrl, videoStreamUrl, videoUrl } from "@/lib/utils/media-url";
 
 const cloud = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const base = `https://res.cloudinary.com/${cloud}`;
@@ -32,7 +32,7 @@ test("an svg is delivered as itself, with no transformation and no srcset", () =
 test("a srcset offers every width the site ships", () => {
   const set = assetSrcSet("/images/destinations/australia-hero.webp");
   expect(set).toBe(
-    [320, 640, 960, 1280]
+    [320, 480, 640, 800, 960, 1280]
       .map((w) => `${base}/image/upload/f_auto,q_auto:eco,c_limit,w_${w}/goodluck/destinations/australia-hero ${w}w`)
       .join(", "),
   );
@@ -59,4 +59,9 @@ test("something that is not a path is left alone", () => {
 test("a video is transcoded on the way out and has an hls ladder", () => {
   expect(videoUrl("/videos/visa-guidance.mp4", 640)).toBe(`${base}/video/upload/q_auto,w_640,c_limit/goodluck/videos/visa-guidance.mp4`);
   expect(videoStreamUrl("/videos/visa-guidance.mp4")).toBe(`${base}/video/upload/sp_auto/goodluck/videos/visa-guidance.m3u8`);
+});
+
+test("every asset url is served from the origin the page preconnects to", () => {
+  expect(assetUrl("/images/hero/sky-v2.webp").startsWith(`${MEDIA_ORIGIN}/`)).toBe(true);
+  expect(videoUrl("/videos/visa-guidance.mp4").startsWith(`${MEDIA_ORIGIN}/`)).toBe(true);
 });

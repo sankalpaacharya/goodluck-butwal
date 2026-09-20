@@ -7,10 +7,11 @@ import { Badge, SectionBg } from "@/components/ui/bits";
 import { Marquee } from "@/components/ui/marquee";
 import { loadText, type Text } from "@/features/site-text/queries";
 import { Img } from "@/components/ui/img";
+import { Heart, Star, Stars5 } from "@/components/ui/icons";
 
 const metaFor = (googleRating: GoogleRating, t: Text) => [
-  { icon: img.star, w: 19, text: t("home.reviews.rating", "{score} Google rating").replace("{score}", googleRating.score) },
-  { icon: img.heart, w: 20, text: t("home.reviews.count", "{count} reviews").replace("{count}", String(googleRating.count)) },
+  { Icon: Star, w: 19, text: t("home.reviews.rating", "{score} Google rating").replace("{score}", googleRating.score) },
+  { Icon: Heart, w: 20, text: t("home.reviews.count", "{count} reviews").replace("{count}", String(googleRating.count)) },
 ];
 
 // Reviewers have no photo on Google, so an initial stands in.
@@ -18,7 +19,7 @@ export function ReviewCard({ r, className = "" }: { r: Review; className?: strin
   return (
     <div className={`flex flex-col items-start justify-between overflow-hidden rounded-[10px] bg-white p-5 md:rounded-[30px] md:p-10 ${className}`}>
       <div className="flex flex-col items-start gap-4 pb-10">
-        <Img src={img.stars5} alt="Five stars" className="h-[18px] w-[109px]" loading="lazy" decoding="async" />
+        <Stars5 role="img" aria-label="Five stars" className="h-[18px] w-[109px]" />
         <p className="t-body line-clamp-7 text-ink">{r.quote}</p>
       </div>
       <div className="flex items-start gap-4">
@@ -46,7 +47,7 @@ function ReviewTile({ r, source, className = "w-[300px] md:w-[400px]" }: { r: Re
           <p className="text-[16px] font-medium leading-5 text-ink">{r.name}</p>
           <p className="t-small whitespace-nowrap text-muted">{source.replace("{date}", r.date)}</p>
         </figcaption>
-        <Img src={img.stars5} alt="Five stars" className="ml-auto h-[14px] w-[85px]" loading="lazy" decoding="async" />
+        <Stars5 role="img" aria-label="Five stars" className="ml-auto h-[14px] w-[85px]" />
       </div>
       <blockquote className="t-base text-ink">{r.quote}</blockquote>
     </figure>
@@ -84,7 +85,7 @@ export async function Reviews({ googleRating, values }: { googleRating: GoogleRa
                   {i > 0 && <span aria-hidden className="h-[22px] w-px bg-ink opacity-30" />}
                   <div className="flex items-start gap-[6px]">
                     <span className="flex h-[22px] items-center">
-                      <Img src={m.icon} alt="" w={160} style={{ width: m.w, height: 18 }} loading="lazy" decoding="async" />
+                      <m.Icon style={{ width: m.w, height: 18 }} />
                     </span>
                     <p className="t-base text-muted">{m.text}</p>
                   </div>

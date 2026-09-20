@@ -9,6 +9,7 @@ import { MotionProvider } from "@/components/layout/motion-provider";
 import { SlowConnectionProvider } from "@/components/ui/link";
 import { OfficeProvider } from "@/features/offices/components/office";
 import { Analytics } from "@/components/shared/analytics";
+import { MediaOriginHint } from "@/components/shared/media-origin-hint";
 import { listOffices } from "@/features/offices/queries";
 import { getFooterColumns, getSocialLinks } from "@/features/settings/queries";
 import { allSettings } from "@/db/settings";
@@ -40,6 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${interDisplay.variable} ${bricolage.variable}`}>
       <body className="overflow-x-clip">
+        <MediaOriginHint />
         <MotionProvider>
           <SlowConnectionProvider>
             <OfficeProvider offices={offices}>

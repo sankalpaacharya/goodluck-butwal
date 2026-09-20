@@ -7,6 +7,7 @@ import { PillButton } from "@/components/ui/button";
 import { Badge, Chip } from "@/components/ui/bits";
 import { VideoDialog } from "@/components/ui/video-dialog";
 import { CARD_SIZES, Img } from "@/components/ui/img";
+import { Arrow } from "@/components/ui/icons";
 
 // White frame with the service artwork. A service with a reel shows the video's poster frame as the play thumbnail instead.
 export function Artwork({ s, className, pad }: { s: Service; className: string; pad: string }) {
@@ -36,7 +37,7 @@ export function ServiceCard({ service, slug, label, title, line, className = "" 
           </div>
         </div>
         <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-ink transition-transform duration-300 group-hover:translate-x-1">
-          <Img src={img.arrow} alt="" w={24} className="h-2 w-3 invert" loading="lazy" decoding="async" />
+          <Arrow className="h-2 w-3 invert" />
         </span>
       </div>
     </Link>
@@ -69,7 +70,7 @@ function Tile({ s, icon, t, className = "" }: { s: Service; icon: string; t: Ton
           <p className={`t-body ${c.text}`}>{s.line}</p>
         </div>
         <span className={`flex size-10 shrink-0 items-center justify-center rounded-full transition-transform duration-300 group-hover:translate-x-1 ${c.arrow}`}>
-          <Img src={img.arrow} alt="" w={24} className={`h-2 w-3 ${c.arrowImg}`} loading="lazy" decoding="async" />
+          <Arrow className={`h-2 w-3 ${c.arrowImg}`} />
         </span>
       </div>
     </Link>
