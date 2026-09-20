@@ -13,7 +13,9 @@ export const MEDIA_ORIGIN = "https://res.cloudinary.com";
 // Stops at 1280. The pictures in public/ are already squeezed hard, and asked for at their own
 // width Cloudinary hands back a re-encode several times bigger than the file it started from
 // (the hero meadow: 262 KB on disk, 1.1 MB at w_1920). Below 1280 it wins on every one of them.
-export const IMAGE_WIDTHS = [320, 640, 960, 1280] as const;
+// The close steps matter on a phone: the browser takes the first width at or above what it needs,
+// so a card needing 656px took 960 (87 KB) when the ladder jumped 640 to 960, and takes 800 now.
+export const IMAGE_WIDTHS = [320, 480, 640, 800, 960, 1280] as const;
 // The hero sky is the one source wide enough to be worth serving past 1280.
 export const WIDE_IMAGE_WIDTHS = [...IMAGE_WIDTHS, 1920, 2560] as const;
 

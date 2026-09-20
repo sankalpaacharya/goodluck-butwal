@@ -32,7 +32,7 @@ test("an svg is delivered as itself, with no transformation and no srcset", () =
 test("a srcset offers every width the site ships", () => {
   const set = assetSrcSet("/images/destinations/australia-hero.webp");
   expect(set).toBe(
-    [320, 640, 960, 1280]
+    [320, 480, 640, 800, 960, 1280]
       .map((w) => `${base}/image/upload/f_auto,q_auto:eco,c_limit,w_${w}/goodluck/destinations/australia-hero ${w}w`)
       .join(", "),
   );

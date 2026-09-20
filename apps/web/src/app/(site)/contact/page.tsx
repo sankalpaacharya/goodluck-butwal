@@ -16,7 +16,8 @@ import { Accordion, FaqCta } from "@/components/shared/faqs";
 import { listTeam } from "@/features/team/queries";
 import { loadText } from "@/features/site-text/queries";
 import { formText } from "@/features/site-text/form-text";
-import { Img } from "@/components/ui/img";
+import { BLANK, Img } from "@/components/ui/img";
+import { assetSrcSet } from "@/lib/utils/media-url";
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
@@ -48,8 +49,12 @@ export default async function ContactPage() {
           <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(255,255,255,0.5)_0%,#fff_50%)]" />
           <Img src={img.fieldSky} alt="" sizes="100vw" w={1280} className="absolute inset-0 size-full object-cover" style={{ objectPosition: "50% 0%" }} loading="lazy" decoding="async" />
         </div>
-        <Img aria-hidden src={img.cloud1} alt="" w={640} className="pointer-events-none absolute z-[1] hidden w-[602px] max-w-none opacity-80 lg:block" style={{ top: 50, left: -50 }} loading="lazy" decoding="async" />
-        <Img aria-hidden src={img.cloud3} alt="" w={640} className="pointer-events-none absolute z-[1] hidden w-[584px] max-w-none opacity-80 lg:block" style={{ top: -150, right: 30 }} loading="lazy" decoding="async" />
+        <div aria-hidden className="pointer-events-none absolute z-[1] hidden w-[602px] max-w-none opacity-80 lg:block" style={{ top: 50, left: -50 }}>
+          <picture><source media="(min-width: 1024px)" srcSet={assetSrcSet(img.cloud1)} sizes="602px" /><Img src={BLANK} alt="" className="w-full" loading="lazy" decoding="async" /></picture>
+        </div>
+        <div aria-hidden className="pointer-events-none absolute z-[1] hidden w-[584px] max-w-none opacity-80 lg:block" style={{ top: -150, right: 30 }}>
+          <picture><source media="(min-width: 1024px)" srcSet={assetSrcSet(img.cloud3)} sizes="584px" /><Img src={BLANK} alt="" className="w-full" loading="lazy" decoding="async" /></picture>
+        </div>
         <div className="container-x relative z-[2]">
           <div className="grid gap-[30px] md:grid-cols-2 lg:gap-[70px]">
             <Appear y={10} duration={0.6} className="flex flex-col items-start gap-5 md:gap-10">

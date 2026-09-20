@@ -4,7 +4,8 @@ import { img } from "@/config/assets";
 import { formatDate } from "@/lib/utils/datetime";
 import { Appear } from "@/components/ui/appear";
 import { Badge, Chip } from "@/components/ui/bits";
-import { CARD_SIZES, Img } from "@/components/ui/img";
+import { BLANK, CARD_SIZES, Img } from "@/components/ui/img";
+import { assetSrcSet } from "@/lib/utils/media-url";
 import { HeroBackdrop } from "@/components/shared/hero-backdrop";
 
 const cx = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(" ");
@@ -50,8 +51,12 @@ export function InnerHero({
       </div>
       {clouds && (
         <>
-          <Img aria-hidden src={img.cloud1} alt="" w={640} className="pointer-events-none absolute z-[1] hidden w-[602px] max-w-none opacity-80 lg:block" style={{ top: 50, left: -50 }} loading="lazy" decoding="async" />
-          <Img aria-hidden src={img.cloud3} alt="" w={640} className="pointer-events-none absolute z-[1] hidden w-[584px] max-w-none opacity-80 lg:block" style={{ top: -150, right: 30 }} loading="lazy" decoding="async" />
+          <div aria-hidden className="pointer-events-none absolute z-[1] hidden w-[602px] max-w-none opacity-80 lg:block" style={{ top: 50, left: -50 }}>
+            <picture><source media="(min-width: 1024px)" srcSet={assetSrcSet(img.cloud1)} sizes="602px" /><Img src={BLANK} alt="" className="w-full" loading="lazy" decoding="async" /></picture>
+          </div>
+          <div aria-hidden className="pointer-events-none absolute z-[1] hidden w-[584px] max-w-none opacity-80 lg:block" style={{ top: -150, right: 30 }}>
+            <picture><source media="(min-width: 1024px)" srcSet={assetSrcSet(img.cloud3)} sizes="584px" /><Img src={BLANK} alt="" className="w-full" loading="lazy" decoding="async" /></picture>
+          </div>
         </>
       )}
       <div className={cx("relative z-[2] w-full", width === 860 ? "px-4 md:max-w-[860px] md:px-5 lg:px-[30px]" : "container-x")}>

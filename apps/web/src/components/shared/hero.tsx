@@ -7,13 +7,12 @@ import { gl, img } from "@/config/assets";
 import type { GoogleRating } from "@/features/settings/queries";
 import { Appear } from "@/components/ui/appear";
 import { FlatButton, PillButton } from "@/components/ui/button";
-import { Img } from "@/components/ui/img";
+import { BLANK, Img } from "@/components/ui/img";
 import { assetSrcSet, assetUrl, type Format, IMAGE_WIDTHS, type Quality, WIDE_IMAGE_WIDTHS } from "@/lib/utils/media-url";
 
 const PHONE = "(max-width: 809px)";
 const PHONE_SKY: [Quality, Format] = ["eco", "avif"];
 
-const BLANK = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 const destinationFlags = [
   { name: "Australia", flag: "/images/flags/australia.svg" },
