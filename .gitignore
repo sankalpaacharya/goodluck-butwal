@@ -3,3 +3,4 @@ designs/
 node_modules
 *.tsbuildinfo
 .github/workflows/backup.yml
+.github/workflows/migrate.yml
