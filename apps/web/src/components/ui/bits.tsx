@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
-import { img } from "@/config/assets";
 import { social } from "@/config/site";
 import { Img } from "@/components/ui/img";
+import { Chevron } from "@/components/ui/icons";
 
 const cx = (...c: (string | false | undefined)[]) => c.filter(Boolean).join(" ");
 
@@ -54,11 +54,11 @@ export function Chip({ children, tone = "surface", wrap }: { children: ReactNode
   );
 }
 
-export function CheckRow({ children, icon = img.chevron, color = "text-muted", iconW = 6 }: { children: ReactNode; icon?: string; color?: string; iconW?: number }) {
+export function CheckRow({ children, color = "text-muted" }: { children: ReactNode; color?: string }) {
   return (
     <div className="flex items-start gap-[6px]">
       <span className="flex h-[22px] items-center">
-        <Img src={icon} alt="" w={80} style={{ width: iconW, height: 10 }} loading="lazy" decoding="async" />
+        <Chevron style={{ width: 6, height: 10 }} />
       </span>
       <p className={cx("text-[16px] font-medium leading-[20.8px]", color)}>{children}</p>
     </div>

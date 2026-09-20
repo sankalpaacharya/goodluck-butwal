@@ -1,10 +1,11 @@
 import { Link } from "@/components/ui/link";
-import { destinationArt, img } from "@/config/assets";
+import { destinationArt } from "@/config/assets";
 import type { PublicDestination } from "@/features/destinations/queries";
 import { Appear } from "@/components/ui/appear";
 import { Badge } from "@/components/ui/bits";
 import { loadText } from "@/features/site-text/queries";
 import { CARD_SIZES, Img } from "@/components/ui/img";
+import { Arrow } from "@/components/ui/icons";
 
 type Card = { slug: string; name: string; line: string; fact?: [string, string]; bg: string; pos: string; flag: string; href: string };
 
@@ -57,7 +58,7 @@ export function DestinationCard({ cards, slug, phone, className = "", cta = "Boo
             <p className="t-small inline-flex h-9 items-center rounded-full bg-surface px-4 font-semibold text-ink">{cta}</p>
           )}
           <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-ink transition-transform duration-300 group-hover:translate-x-1">
-            <Img src={img.arrow} alt="" w={24} className="h-2 w-3 invert" loading="lazy" decoding="async" />
+            <Arrow className="h-2 w-3 invert" />
           </span>
         </div>
       </div>
