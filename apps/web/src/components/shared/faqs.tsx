@@ -79,7 +79,7 @@ export function FaqCta({ faces, className = "", text = ctaText }: { faces: Publi
 
 export function Faqs({ faces, items, text }: { faces: PublicMember[]; items: FaqItem[]; text: { title: string; lead: string; still: FaqCtaText } }) {
   return (
-    <section className="flex w-full flex-col items-center pb-[30px] md:pb-[60px] lg:pb-[100px]">
+    <section className="flex w-full flex-col items-center pb-[30px] md:pb-[60px] lg:pb-[100px] [contain-intrinsic-size:auto_900px] [content-visibility:auto]">
       <div className="container-x">
         <div className="flex flex-col gap-[30px] md:flex-row md:items-start lg:gap-[70px]">
           <Appear className="contents md:flex md:w-[349px] md:flex-col md:items-start md:gap-10 lg:w-[424px] lg:gap-[80px]">
