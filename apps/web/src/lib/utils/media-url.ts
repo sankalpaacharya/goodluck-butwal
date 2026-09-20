@@ -6,6 +6,10 @@ export type MediaRow = {
 
 const CLOUD = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
+// Every picture and video on the site is served from here, so the page opens the connection to it
+// before the first <img> is parsed.
+export const MEDIA_ORIGIN = "https://res.cloudinary.com";
+
 // Stops at 1280. The pictures in public/ are already squeezed hard, and asked for at their own
 // width Cloudinary hands back a re-encode several times bigger than the file it started from
 // (the hero meadow: 262 KB on disk, 1.1 MB at w_1920). Below 1280 it wins on every one of them.
@@ -24,7 +28,7 @@ export function assetId(path: string) {
 }
 
 function deliver(kind: "image" | "video", transform: string, id: string) {
-  return `https://res.cloudinary.com/${CLOUD}/${kind}/upload/${transform ? `${transform}/` : ""}${id}`;
+  return `${MEDIA_ORIGIN}/${CLOUD}/${kind}/upload/${transform ? `${transform}/` : ""}${id}`;
 }
 
 // c_limit everywhere: without it a source narrower than the asked-for width is upscaled, which

@@ -1,5 +1,5 @@
 import { test, expect } from "vitest";
-import { assetId, assetSrcSet, assetUrl, mediaUrl, videoStreamUrl, videoUrl } from "@/lib/utils/media-url";
+import { MEDIA_ORIGIN, assetId, assetSrcSet, assetUrl, mediaUrl, videoStreamUrl, videoUrl } from "@/lib/utils/media-url";
 
 const cloud = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const base = `https://res.cloudinary.com/${cloud}`;
@@ -59,4 +59,10 @@ test("something that is not a path is left alone", () => {
 test("a video is transcoded on the way out and has an hls ladder", () => {
   expect(videoUrl("/videos/visa-guidance.mp4", 640)).toBe(`${base}/video/upload/q_auto,w_640,c_limit/goodluck/videos/visa-guidance.mp4`);
   expect(videoStreamUrl("/videos/visa-guidance.mp4")).toBe(`${base}/video/upload/sp_auto/goodluck/videos/visa-guidance.m3u8`);
+});
+
+// The layout preconnects to MEDIA_ORIGIN, which only helps if that is where the pictures are.
+test("every asset url is served from the origin the page preconnects to", () => {
+  expect(assetUrl("/images/hero/sky-v2.webp").startsWith(`${MEDIA_ORIGIN}/`)).toBe(true);
+  expect(videoUrl("/videos/visa-guidance.mp4").startsWith(`${MEDIA_ORIGIN}/`)).toBe(true);
 });
