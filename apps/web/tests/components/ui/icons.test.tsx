@@ -4,8 +4,6 @@ import * as icons from "@/components/ui/icons";
 
 const all = Object.entries(icons);
 
-// The source files carry a width and a height and no viewBox. Inline, that means a CSS height
-// crops the icon instead of scaling it, which is invisible until a class changes the size.
 test("every icon scales with its box", () => {
   for (const [name, Icon] of all) {
     const html = renderToStaticMarkup(<Icon className="h-2 w-3" />);

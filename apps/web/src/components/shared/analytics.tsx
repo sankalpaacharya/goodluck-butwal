@@ -3,8 +3,6 @@ import { gtmId } from "@/lib/integrations/analytics";
 import { allSettings } from "@/db/settings";
 
 // The GA4 id lives in the container and the container id in settings, so neither needs a deploy.
-// lazyOnload, not afterInteractive: the container is a few hundred KB of its own and on a 2G
-// connection it was taking bandwidth from the pictures while the page was still filling in.
 export async function Analytics() {
   const configured = (await allSettings()).get("gtm_id");
 

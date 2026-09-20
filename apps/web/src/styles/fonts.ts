@@ -1,8 +1,7 @@
 import localFont from "next/font/local";
 import { Bricolage_Grotesque } from "next/font/google";
 
-// Not on Google Fonts, so the latin files are bundled. Only 500 and 600 are used, and both are
-// preloaded: they carry the body text, the nav and the buttons.
+// Not on Google Fonts, so the latin files are bundled. Only 500 and 600 are used.
 export const interDisplay = localFont({
   src: [
     { path: "../assets/fonts/InterDisplay-Medium.woff2", weight: "500" },
@@ -12,6 +11,5 @@ export const interDisplay = localFont({
   display: "swap",
 });
 
-// The headings are the only thing in this face. Swap paints them in the fallback either way, so
-// preloading it only took 22 KB off the picture the page is waiting for.
+// Not preloaded: swap paints the headings in the fallback until it arrives.
 export const bricolage = Bricolage_Grotesque({ subsets: ["latin"], weight: ["600"], variable: "--font-bricolage", display: "swap", preload: false });

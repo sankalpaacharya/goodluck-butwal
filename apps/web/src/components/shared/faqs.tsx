@@ -21,16 +21,14 @@ const ctaText: FaqCtaText = {
 
 const panelSpring = { type: "spring", bounce: 0, duration: 0.5 } as const;
 
-// Every panel starts closed, and the list keeps room for the longest answer below it. One panel
-// opens at a time, so that room is exactly what any of them needs: the answer takes it as the
-// spacer gives it back, and nothing under the list, the footer included, moves.
+// One panel opens at a time, so room for the longest answer is room for any of them. The spacer
+// gives that room back as a panel takes it, which is what keeps the footer still.
 export function Accordion({ items, variant = "surface" }: { items: FaqItem[]; variant?: "surface" | "white" }) {
   const [open, setOpen] = useState<number | null>(null);
   const [heights, setHeights] = useState<number[]>([]);
   const answers = useRef<(HTMLParagraphElement | null)[]>([]);
 
-  // An answer sits in a box the panel animates to zero, so the paragraph keeps its own height and
-  // can be measured while it is closed. Re-measured on resize: the wrap changes with the width.
+  // The paragraph keeps its height inside the collapsed box, so a closed answer still measures.
   const measure = useCallback(() => setHeights(answers.current.map((el) => el?.offsetHeight ?? 0)), []);
   useLayoutEffect(() => {
     measure();

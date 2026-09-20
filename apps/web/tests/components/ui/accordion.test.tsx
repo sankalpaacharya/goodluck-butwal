@@ -14,8 +14,6 @@ test("every panel starts closed", () => {
   expect(html().match(/aria-expanded="false"/g)).toHaveLength(2);
 });
 
-// The answers have to be in the markup from the start, closed to a height of zero: that is what
-// the list measures to know how much room to keep, and it is what a crawler reads.
 test("a closed answer is rendered, at no height", () => {
   expect(html()).toContain("Undergraduate and postgraduate.");
   expect(html().match(/style="height:0px;opacity:0"/g)).toHaveLength(2);

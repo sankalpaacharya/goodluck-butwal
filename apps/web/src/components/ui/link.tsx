@@ -28,8 +28,6 @@ const Slow = createContext(false);
 export function SlowConnectionProvider({ children }: { children: ReactNode }) {
   const slow = useSyncExternalStore(subscribe, () => slowConnection(connection()), () => false);
 
-  // The decorative loops in globals.css read this. A phone on 2G is usually a cheap phone, and a
-  // ring that spins for ever costs it frames it needs for the scroll.
   useEffect(() => {
     document.documentElement.toggleAttribute("data-slow-connection", slow);
   }, [slow]);

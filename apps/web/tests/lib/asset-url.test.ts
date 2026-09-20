@@ -61,7 +61,6 @@ test("a video is transcoded on the way out and has an hls ladder", () => {
   expect(videoStreamUrl("/videos/visa-guidance.mp4")).toBe(`${base}/video/upload/sp_auto/goodluck/videos/visa-guidance.m3u8`);
 });
 
-// The layout preconnects to MEDIA_ORIGIN, which only helps if that is where the pictures are.
 test("every asset url is served from the origin the page preconnects to", () => {
   expect(assetUrl("/images/hero/sky-v2.webp").startsWith(`${MEDIA_ORIGIN}/`)).toBe(true);
   expect(videoUrl("/videos/visa-guidance.mp4").startsWith(`${MEDIA_ORIGIN}/`)).toBe(true);

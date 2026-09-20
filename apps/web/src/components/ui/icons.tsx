@@ -1,9 +1,6 @@
 import type { SVGProps } from "react";
 
-// The same handful of icons appeared 70 times on the home page, each one a request to the image
-// CDN. Inline they cost nothing on the wire: gzip collapses the repeats. The paths are the files
-// from public/images/ui, with a viewBox added so CSS can size them, and the clip paths dropped:
-// they only clipped to the box the viewBox already gives.
+// The paths are the files from public/images/ui, with a viewBox added so CSS can size them.
 type Icon = (props: SVGProps<SVGSVGElement>) => React.ReactElement;
 
 export const Arrow: Icon = (props) => (
