@@ -35,7 +35,7 @@ export default async function FaqPage() {
             {groups.map(([title, items], i) => (
               <Appear key={title} delay={0.05 * i} className="flex w-full flex-col items-center gap-5 rounded-[10px] bg-surface p-5 md:gap-[30px] md:rounded-[30px] md:p-[30px] lg:p-[50px]">
                 <h2 className="t-h4 text-center">{title}</h2>
-                <Accordion items={items} variant="white" defaultOpen={i === 0 ? 0 : null} />
+                <Accordion items={items} variant="white" />
               </Appear>
             ))}
             <FaqCta faces={faces} />

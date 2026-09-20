@@ -19,8 +19,9 @@ const ctaText: FaqCtaText = {
   you: "You",
 };
 
-export function Accordion({ items, defaultOpen = 0, variant = "surface" }: { items: FaqItem[]; defaultOpen?: number | null; variant?: "surface" | "white" }) {
-  const [open, setOpen] = useState<number | null>(defaultOpen);
+// Every panel starts closed: an answer nobody asked for pushes the rest of the page down.
+export function Accordion({ items, variant = "surface" }: { items: FaqItem[]; variant?: "surface" | "white" }) {
+  const [open, setOpen] = useState<number | null>(null);
   return (
     <div className="flex w-full flex-col items-start gap-4 md:gap-5">
       {items.map(({ q, a }, i) => {
