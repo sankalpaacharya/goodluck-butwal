@@ -5,7 +5,7 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { breadcrumbs } from "@/lib/seo/schema";
 import { company } from "@/config/site";
 import { getAboutContent, getCompanyProfile } from "@/features/pages/queries";
-import { listOffices, listServiceLinks } from "@/features/offices/queries";
+import { listOffices } from "@/features/offices/queries";
 import { listDestinations } from "@/features/destinations/queries";
 import { listTeam } from "@/features/team/queries";
 import { getSocialLinks } from "@/features/settings/queries";
@@ -36,10 +36,9 @@ const Detail = ({ icon, center, className = "", children }: { icon: LucideIcon; 
 );
 
 export default async function CompanyProfilePage() {
-  const [t, offices, services, destinations, team, social, about, profile] = await Promise.all([
+  const [t, offices, destinations, team, social, about, profile] = await Promise.all([
     loadText(),
     listOffices(),
-    listServiceLinks(),
     listDestinations(),
     listTeam(),
     getSocialLinks(),
@@ -60,11 +59,11 @@ export default async function CompanyProfilePage() {
     {
       title: t("about.profile.group_registration", "Registration"),
       rows: [
-        { label: t("about.profile.label_name", "Name of the company"), value: company.name, icon: Building2, strong: true },
+        { label: t("about.profile.label_name", "Name of the company"), value: profile?.registered_name, icon: Building2, strong: true },
         { label: t("about.profile.label_type", "Type"), value: profile?.type, icon: BriefcaseBusiness },
         { label: t("about.profile.label_authority", "Registration authority"), value: profile?.registration_authority, icon: Landmark },
         { label: t("about.profile.label_registration", "Company registration no."), value: profile?.registration_no, icon: FileText, strong: true },
-        { label: t("about.profile.label_vat", "VAT no."), value: profile?.vat_no, icon: Receipt, strong: true },
+        { label: t("about.profile.label_pan", "PAN no."), value: profile?.pan_no, icon: Receipt, strong: true },
         { label: t("about.profile.label_bank", "Official bank"), value: profile?.bank, icon: Banknote },
         { label: t("about.profile.label_associations", "Associated with"), value: profile?.associations, icon: Users },
       ],
@@ -72,9 +71,9 @@ export default async function CompanyProfilePage() {
     {
       title: t("about.profile.group_business", "Business"),
       rows: [
-        { label: t("about.profile.label_business", "Nature of business"), value: services.map((s) => s.name).join(", "), icon: Briefcase, strong: true },
+        { label: t("about.profile.label_business", "Nature of business"), value: profile?.business, icon: Briefcase, strong: true },
         { label: t("about.profile.label_experience", "Working experience"), value: about.established, icon: CalendarDays },
-        { label: t("about.profile.label_operated", "Operated and promoted by"), value: `${about.founders} (${t("about.founders.role", "Co-founders").toLowerCase()}) with a team of ${team.length}`, icon: UserRound },
+        { label: t("about.profile.label_operated", "Operated and promoted by"), value: profile?.operated_by, icon: UserRound },
         {
           label: t("about.profile.label_countries", "We recruit students in"),
           icon: Globe,
@@ -134,7 +133,7 @@ export default async function CompanyProfilePage() {
                   <Appear key={group.title} delay={0.05 * i} className="grid gap-5 rounded-[20px] bg-surface p-5 md:rounded-[24px] md:p-[30px] lg:grid-cols-[300px_1fr] lg:gap-[60px] lg:p-10">
                     <h3 className="t-h3">{group.title}</h3>
                     <dl className="divide-y divide-hairline">
-                      {group.rows.map((row) => (
+                      {group.rows.filter((row) => row.value).map((row) => (
                         <div key={row.label} className="grid gap-2 py-5 first:pt-0 last:pb-0 md:grid-cols-[240px_1fr] md:gap-[30px]">
                           <dt className="t-base flex items-start gap-2 text-muted">
                             <Icon icon={row.icon} className="mt-[2px]" />

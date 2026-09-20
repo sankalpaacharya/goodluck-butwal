@@ -73,14 +73,17 @@ export const getAboutContent = cache(async (): Promise<AboutContent> => {
 });
 
 // Registered particulars are not in the repo, so they live on the page row like the other about
-// content. The seeded values are placeholders until the client sends the real ones.
+// content.
 export type ProfileBlocks = {
+  registered_name: string;
   type: string;
   registration_authority: string;
   registration_no: string;
-  vat_no: string;
+  pan_no: string;
   bank: string;
   associations: string;
+  business: string;
+  operated_by: string;
 };
 
 export const getCompanyProfile = cache(async () => {
