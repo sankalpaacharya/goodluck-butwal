@@ -12,7 +12,7 @@ import { Img } from "@/components/ui/img";
 
 export type FooterText = { tagline: string; officesHeading: string; copyright: string };
 
-export function Footer({ columns, socials, text }: { columns: FooterColumn[]; socials: SocialLink[]; text: FooterText }) {
+export function Footer({ columns, socials, email, text }: { columns: FooterColumn[]; socials: SocialLink[]; email: string; text: FooterText }) {
   const { office, offices } = useOffice();
   const ordered = [...offices].sort((a, b) => Number(b.id === office) - Number(a.id === office));
   const heading = "text-[18px] font-semibold leading-[23.4px] text-ink md:text-[20px] md:leading-[26px]";
@@ -36,8 +36,8 @@ export function Footer({ columns, socials, text }: { columns: FooterColumn[]; so
               <Img src={gl.logo} alt="Goodluck Education and Migration" w={320} className="h-full w-auto object-contain" loading="lazy" decoding="async" />
             </Link>
             <h2 className="t-h3">{text.tagline}</h2>
-            <a href={`mailto:${company.email}`} className="t-lead font-semibold text-ink transition-colors hover:text-muted">
-              {company.email}
+            <a href={`mailto:${email}`} className="t-lead font-semibold text-ink transition-colors hover:text-muted">
+              {email}
             </a>
             <SocialLinks links={socials} />
           </Appear>

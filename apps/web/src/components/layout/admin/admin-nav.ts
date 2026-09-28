@@ -36,6 +36,7 @@ export const NAV: NavGroup[] = [
   {
     heading: "Admin",
     items: [
+      { href: "/admin/contact", label: "Contact", entity: "settings" },
       { href: "/admin/company-profile", label: "Company profile", entity: "settings" },
       { href: "/admin/settings", label: "Settings", entity: "settings" },
       { href: "/admin/users", label: "Users", entity: "users" },

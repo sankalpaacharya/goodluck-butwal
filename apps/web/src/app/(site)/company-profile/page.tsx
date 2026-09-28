@@ -8,7 +8,7 @@ import { getAboutContent, getCompanyProfile } from "@/features/pages/queries";
 import { listOffices } from "@/features/offices/queries";
 import { listDestinations } from "@/features/destinations/queries";
 import { listTeam } from "@/features/team/queries";
-import { getSocialLinks } from "@/features/settings/queries";
+import { getSocialLinks, getFooterEmail } from "@/features/settings/queries";
 import { loadText } from "@/features/site-text/queries";
 import { Appear } from "@/components/ui/appear";
 import { Link } from "@/components/ui/link";
@@ -36,7 +36,7 @@ const Detail = ({ icon, center, className = "", children }: { icon: LucideIcon; 
 );
 
 export default async function CompanyProfilePage() {
-  const [t, offices, destinations, team, social, about, profile] = await Promise.all([
+  const [t, offices, destinations, team, social, about, profile, footerEmail] = await Promise.all([
     loadText(),
     listOffices(),
     listDestinations(),
@@ -44,7 +44,9 @@ export default async function CompanyProfilePage() {
     getSocialLinks(),
     getAboutContent(),
     getCompanyProfile(),
+    getFooterEmail(),
   ]);
+  const email = footerEmail || company.email;
 
   const officeOf = (id: string | null) => offices.find((o) => o.id === id);
   const officeRank = (id: string | null) => {
@@ -93,7 +95,7 @@ export default async function CompanyProfilePage() {
     {
       title: t("about.profile.group_contact", "Contact"),
       rows: [
-        { label: t("about.profile.label_email", "E-mail"), icon: Mail, value: <a href={`mailto:${company.email}`} className="underline underline-offset-4">{company.email}</a> },
+        { label: t("about.profile.label_email", "E-mail"), icon: Mail, value: <a href={`mailto:${email}`} className="underline underline-offset-4">{email}</a> },
         {
           label: t("about.profile.label_website", "Website"),
           icon: LinkIcon,

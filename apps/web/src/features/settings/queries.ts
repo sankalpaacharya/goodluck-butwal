@@ -42,4 +42,9 @@ export const getGoogleRating = cache(async () => {
   };
 });
 
+export const getFooterEmail = cache(async (): Promise<string> => {
+  const byKey = await allSettings();
+  return String(byKey.get("footer_email") ?? "").trim();
+});
+
 export type GoogleRating = Awaited<ReturnType<typeof getGoogleRating>>;

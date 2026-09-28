@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/shared/json-ld";
 import { breadcrumbs } from "@/lib/seo/schema";
 import { img } from "@/config/assets";
 import { company } from "@/config/site";
+import { getFooterEmail } from "@/features/settings/queries";
 import { getAboutContent } from "@/features/pages/queries";
 import { Appear } from "@/components/ui/appear";
 import { PillButton } from "@/components/ui/button";
@@ -17,13 +18,13 @@ export async function generateMetadata(): Promise<Metadata> {
 const tones = ["surface", "dark", "blue", "surface"] as const;
 
 export default async function CareersPage() {
-  const t = await loadText();
-  const about = await getAboutContent();
+  const [t, about, footerEmail] = await Promise.all([loadText(), getAboutContent(), getFooterEmail()]);
+  const email = footerEmail || company.email;
 
   return (
     <>
       <JsonLd data={breadcrumbs([{ name: "Home", path: "/" }, { name: "About us", path: "/about" }, { name: "Careers", path: "/about/careers" }])} />
-      <InnerHero badge={t("about.careers.badge", "Careers")} title={t("about.careers.title", "Climb your career ladder with Goodluck")} lead={t("about.careers.lead", "We hold your efforts in high regard.")} after={<Appear delay={0.1}><PillButton href={`mailto:${company.email}`}>Email {company.email}</PillButton></Appear>} />
+      <InnerHero badge={t("about.careers.badge", "Careers")} title={t("about.careers.title", "Climb your career ladder with Goodluck")} lead={t("about.careers.lead", "We hold your efforts in high regard.")} after={<Appear delay={0.1}><PillButton href={`mailto:${email}`}>Email {email}</PillButton></Appear>} />
       <section className="flex w-full flex-col items-center pb-[100px] md:pb-[160px] lg:pb-[200px]">
         <div className="container-x">
           <div className="flex flex-col items-center gap-[30px] md:gap-10 lg:gap-[50px]">

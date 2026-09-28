@@ -12,7 +12,7 @@ import { OfficeProvider } from "@/features/offices/components/office";
 import { Analytics } from "@/components/shared/analytics";
 import { MediaOriginHint } from "@/components/shared/media-origin-hint";
 import { listOffices } from "@/features/offices/queries";
-import { getFooterColumns, getSocialLinks } from "@/features/settings/queries";
+import { getFooterColumns, getFooterEmail, getSocialLinks } from "@/features/settings/queries";
 import { allSettings } from "@/db/settings";
 import { loadText } from "@/features/site-text/queries";
 
@@ -48,10 +48,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 300;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [offices, columns, socials, t] = await Promise.all([
+  const [offices, columns, socials, email, t] = await Promise.all([
     listOffices(),
     getFooterColumns(),
     getSocialLinks(),
+    getFooterEmail(),
     loadText(),
   ]);
 
@@ -74,6 +75,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Footer
                 columns={columns}
                 socials={socials}
+                email={email || company.email}
                 text={{
                   tagline: t("footer.tagline", "Ready to create your luck?"),
                   officesHeading: t("footer.offices.title", "Offices"),
