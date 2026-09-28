@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
+import { breadcrumbs, localBusiness } from "@/lib/seo/schema";
 import { Link } from "@/components/ui/link";
 import { notFound } from "next/navigation";
 import { Appear } from "@/components/ui/appear";
@@ -17,10 +20,14 @@ export const revalidate = 300;
 export const generateStaticParams = async () => (await listOfficeProfiles()).map((o) => ({ slug: o.slug }));
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const office = await getOfficeProfile((await params).slug);
-  return office
-    ? { title: `${office.city}, ${office.country}`, description: office.address }
-    : { title: "Office" };
+  const { slug } = await params;
+  const office = await getOfficeProfile(slug);
+  if (!office) return buildMetadata({ path: "/offices", title: "Office", noindex: true });
+  return buildMetadata({
+    path: `/offices/${slug}`,
+    title: `Goodluck ${office.city}`,
+    description: `Visit our ${office.city} office in ${office.country} for study abroad, student visa and migration advice. ${office.address}.`,
+  });
 }
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -43,6 +50,21 @@ export default async function OfficePage({ params }: Props) {
 
   return (
     <>
+      <JsonLd
+        data={[
+          localBusiness({
+            name: office.label,
+            slug: office.slug,
+            address: office.address,
+            city: office.city,
+            country: office.country,
+            phone: office.phone,
+            email: office.email,
+            structuredHours: office.openingHours ?? undefined,
+          }),
+          breadcrumbs([{ name: "Home", path: "/" }, { name: "Our offices", path: "/about/offices" }, { name: `${office.city}, ${office.country}`, path: `/offices/${office.slug}` }]),
+        ]}
+      />
       <InnerHero badge={office.label} title={`${office.city}, ${office.country}`} lead={office.address} />
 
       <section className="pb-section flex w-full flex-col items-center">

@@ -1,5 +1,5 @@
 import { absoluteUrl } from "@/lib/seo";
-import { company } from "@/config/site";
+import { company, seo } from "@/config/site";
 
 export type Schema = Record<string, unknown>;
 
@@ -12,19 +12,57 @@ export function toJsonLd(data: Schema | Schema[]) {
 }
 
 const ORGANIZATION_ID = `${company.url}/#organization`;
+const WEBSITE_ID = `${company.url}/#website`;
 
-export function organization(socials: string[] = []): Schema {
+const asList = (value: string[] | undefined) => (value ?? []).map((item) => item.trim()).filter(Boolean);
+
+const ALIASES = [company.name, "Goodluck", "Goodluck Education", "Goodluck Education and Migration", "Goodluck Consultancy"];
+
+export type OrganizationInput = {
+  socials?: string[];
+  services?: { name: string; slug: string; description?: string }[];
+};
+
+export function organization(input: OrganizationInput = {}): Schema {
+  const socials = asList(input.socials);
+  const services = input.services ?? [];
+
   return {
     "@context": "https://schema.org",
-    "@type": "Organization",
+    "@type": "EducationalOrganization",
     "@id": ORGANIZATION_ID,
     name: company.name,
+    alternateName: ALIASES,
     url: company.url,
     logo: absoluteUrl("/brand/logo.png"),
+    image: absoluteUrl("/brand/logo.png"),
     email: company.email,
     description: company.tagline,
+    slogan: company.tagline,
     foundingDate: String(company.founded),
+    knowsAbout: seo.keywords,
+    areaServed: [
+      ...seo.countries.map((name) => ({ "@type": "Country", name })),
+      ...seo.cities.map((name) => ({ "@type": "City", name })),
+    ],
+    availableLanguage: ["en", "ne", "fil"],
     ...(socials.length ? { sameAs: socials } : {}),
+    ...(services.length
+      ? {
+          makesOffer: services.map((service) => ({
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: service.name,
+              ...(service.description ? { description: service.description } : {}),
+              url: absoluteUrl(`/services/${service.slug}`),
+              serviceType: service.name,
+              provider: { "@id": ORGANIZATION_ID },
+              areaServed: seo.countries.map((name) => ({ "@type": "Country", name })),
+            },
+          })),
+        }
+      : {}),
   };
 }
 
@@ -32,29 +70,60 @@ export function webSite(): Schema {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": `${company.url}/#website`,
+    "@id": WEBSITE_ID,
     name: company.name,
+    alternateName: company.short,
     url: company.url,
+    inLanguage: "en",
     publisher: { "@id": ORGANIZATION_ID },
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${company.url}/search?q={search_term_string}`,
+      },
+      "query-input": "required name=search_term_string",
+    },
   };
+}
+
+const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+export type OpeningHoursInput = { day: number; open: string; close: string; closed: boolean }[];
+
+function openingHoursSpecification(hours: OpeningHoursInput) {
+  return hours
+    .filter((entry) => !entry.closed && entry.open && entry.close)
+    .map((entry) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: `https://schema.org/${WEEKDAYS[entry.day]}`,
+      opens: entry.open,
+      closes: entry.close,
+    }));
 }
 
 export type OfficeSchemaInput = {
   name: string;
+  slug?: string;
   address: string;
   city: string;
   country: string;
   phone: string;
+  email?: string;
   hours?: string;
+  structuredHours?: OpeningHoursInput;
 };
 
 export function localBusiness(office: OfficeSchemaInput): Schema {
+  const url = office.slug ? absoluteUrl(`/offices/${office.slug}`) : absoluteUrl("/contact");
   return {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
+    "@id": `${url}#localbusiness`,
     name: `${company.name} ${office.name}`,
-    url: absoluteUrl("/contact"),
+    url,
     parentOrganization: { "@id": ORGANIZATION_ID },
+    logo: absoluteUrl("/brand/logo.png"),
     address: {
       "@type": "PostalAddress",
       streetAddress: office.address,
@@ -62,7 +131,10 @@ export function localBusiness(office: OfficeSchemaInput): Schema {
       addressCountry: office.country,
     },
     ...(office.phone ? { telephone: office.phone } : {}),
+    ...(office.email ? { email: office.email } : {}),
     ...(office.hours ? { openingHours: office.hours } : {}),
+    ...(office.structuredHours?.length ? { openingHoursSpecification: openingHoursSpecification(office.structuredHours) } : {}),
+    areaServed: seo.countries.map((name) => ({ "@type": "Country", name })),
   };
 }
 
@@ -72,21 +144,73 @@ export type ArticleSchemaInput = {
   excerpt: string;
   image: string;
   date: string;
+  updatedAt?: string;
+  author?: string;
+  category?: string;
+  tags?: string[];
 };
 
 export function article(post: ArticleSchemaInput): Schema {
   const url = absoluteUrl(`/news/${post.slug}`);
+  const tags = asList(post.tags);
+
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: post.excerpt,
-    ...(post.image ? { image: absoluteUrl(post.image) } : {}),
-    ...(post.date ? { datePublished: post.date } : {}),
+    "@type": "BlogPosting",
+    "@id": `${url}#article`,
+    isPartOf: { "@id": WEBSITE_ID },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `${url}#webpage` },
     url,
-    mainEntityOfPage: url,
-    author: { "@id": ORGANIZATION_ID },
+    headline: post.title.slice(0, 110),
+    ...(post.excerpt ? { description: post.excerpt } : {}),
+    ...(post.image ? { image: [absoluteUrl(post.image)] } : {}),
+    ...(post.date ? { datePublished: post.date } : {}),
+    ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
+    ...(post.author
+      ? { author: { "@type": "Person", name: post.author, worksFor: { "@id": ORGANIZATION_ID } } }
+      : { author: { "@id": ORGANIZATION_ID } }),
+    publisher: {
+      "@type": "Organization",
+      "@id": ORGANIZATION_ID,
+      name: company.name,
+      logo: { "@type": "ImageObject", url: absoluteUrl("/brand/logo.png") },
+    },
+    ...(post.category ? { articleSection: post.category } : {}),
+    ...(tags.length ? { keywords: [post.category ?? "", ...tags].filter(Boolean).join(", ") } : {}),
+    inLanguage: "en",
+    isAccessibleForFree: true,
+  };
+}
+
+export function blog(input: { name: string; description: string; path: string; posts: ArticleSchemaInput[] }): Schema {
+  const url = absoluteUrl(input.path);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "@id": `${url}#blog`,
+    url,
+    name: input.name,
+    description: input.description,
+    inLanguage: "en",
+    isPartOf: { "@id": WEBSITE_ID },
     publisher: { "@id": ORGANIZATION_ID },
+    blogPost: input.posts.map((post) => ({ "@id": `${absoluteUrl(`/news/${post.slug}`)}#article` })),
+  };
+}
+
+export function person(input: { name: string; slug: string; jobTitle?: string; description?: string; image?: string }): Schema {
+  const url = absoluteUrl(`/team/${input.slug}`);
+  return {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "@id": `${url}#person`,
+    name: input.name,
+    url,
+    ...(input.jobTitle ? { jobTitle: input.jobTitle } : {}),
+    ...(input.description ? { description: input.description } : {}),
+    ...(input.image ? { image: input.image } : {}),
+    worksFor: { "@id": ORGANIZATION_ID },
+    worksAt: { "@id": ORGANIZATION_ID },
   };
 }
 
@@ -117,6 +241,8 @@ export function event(input: EventSchemaInput): Schema {
   return {
     "@context": "https://schema.org",
     "@type": "Event",
+    "@id": `${url}#event`,
+    url,
     name: input.title,
     description: input.summary,
     ...(input.image ? { image: absoluteUrl(input.image) } : {}),
@@ -126,8 +252,8 @@ export function event(input: EventSchemaInput): Schema {
       ? "https://schema.org/OnlineEventAttendanceMode"
       : "https://schema.org/OfflineEventAttendanceMode",
     eventStatus: "https://schema.org/EventScheduled",
+    isAccessibleForFree: true,
     location,
-    url,
     organizer: { "@id": ORGANIZATION_ID },
   };
 }
@@ -146,7 +272,25 @@ export function course(input: CourseSchemaInput): Schema {
     name: input.name,
     ...(input.description ? { description: input.description } : {}),
     url: absoluteUrl(input.path),
+    inLanguage: "en",
     provider: { "@type": "Organization", name: input.provider },
+  };
+}
+
+export function itemList(input: { path: string; name: string; items: { path: string; name: string }[] }): Schema {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${absoluteUrl(input.path)}#itemlist`,
+    name: input.name,
+    numberOfItems: input.items.length,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    itemListElement: input.items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.name,
+      url: absoluteUrl(item.path),
+    })),
   };
 }
 
@@ -154,6 +298,8 @@ export function faqPage(items: { q: string; a: string }[]): Schema {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": `${absoluteUrl("/faq")}#faq`,
+    url: absoluteUrl("/faq"),
     mainEntity: items.map((item) => ({
       "@type": "Question",
       name: item.q,

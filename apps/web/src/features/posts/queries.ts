@@ -2,7 +2,7 @@ import { cache } from "react";
 import { TAGS, cached } from "@/lib/cache";
 import { and, asc, eq } from "drizzle-orm";
 import { db } from "@goodluck/db";
-import { mediaAssets, postCategories, postTags, posts, tags } from "@goodluck/db/schema";
+import { mediaAssets, postCategories, postTags, posts, tags, users } from "@goodluck/db/schema";
 import { slugify } from "@/lib/utils/slug";
 import { mediaUrl } from "@/lib/utils/media-url";
 
@@ -10,14 +10,16 @@ export type PublicArticle = {
   slug: string;
   title: string;
   date: string;
+  updatedAt?: string;
   category: string;
   image: string;
   excerpt: string;
+  author?: string;
   width?: number;
   height?: number;
 };
 
-export type FullArticle = PublicArticle & { html: string };
+export type FullArticle = PublicArticle & { html: string; tags: string[] };
 
 const listArticlesUncached = cached(async (): Promise<PublicArticle[]> => {
   const rows = await db
@@ -25,6 +27,7 @@ const listArticlesUncached = cached(async (): Promise<PublicArticle[]> => {
       slug: posts.slug,
       title: posts.title,
       date: posts.publishedAt,
+      updatedAt: posts.updatedAt,
       category: postCategories.name,
       kind: mediaAssets.kind,
       staticPath: mediaAssets.staticPath,
@@ -32,6 +35,7 @@ const listArticlesUncached = cached(async (): Promise<PublicArticle[]> => {
       width: mediaAssets.width,
       height: mediaAssets.height,
       excerpt: posts.excerpt,
+      author: posts.authorDisplayName,
       sortOrder: posts.sortOrder,
     })
     .from(posts)
@@ -47,9 +51,11 @@ const listArticlesUncached = cached(async (): Promise<PublicArticle[]> => {
     slug: row.slug,
     title: row.title,
     date: row.date ? row.date.toISOString().slice(0, 10) : "",
+    updatedAt: row.updatedAt.toISOString(),
     category: row.category ?? "",
     image: mediaUrl(row, 960),
     excerpt: row.excerpt ?? "",
+    author: row.author ?? undefined,
     width: row.width ?? undefined,
     height: row.height ?? undefined,
   }));
@@ -72,22 +78,37 @@ export const getArticle = cache(async (slug: string): Promise<FullArticle | unde
       height: mediaAssets.height,
       excerpt: posts.excerpt,
       html: posts.bodyHtml,
+      updatedAt: posts.updatedAt,
+      author: posts.authorDisplayName,
+      authorAccount: users.name,
+      id: posts.id,
     })
     .from(posts)
     .leftJoin(postCategories, eq(posts.categoryId, postCategories.id))
     .leftJoin(mediaAssets, eq(posts.bannerImageId, mediaAssets.id))
+    .leftJoin(users, eq(posts.authorId, users.id))
     .where(and(eq(posts.slug, slug), eq(posts.status, "published")))
     .limit(1);
 
   if (!row) return undefined;
+
+  const tagRows = await db
+    .select({ name: tags.name })
+    .from(postTags)
+    .innerJoin(tags, eq(postTags.tagId, tags.id))
+    .where(eq(postTags.postId, row.id));
+
   return {
     slug: row.slug,
     title: row.title,
     date: row.date ? row.date.toISOString().slice(0, 10) : "",
+    updatedAt: row.updatedAt.toISOString(),
     category: row.category ?? "",
     image: mediaUrl(row, 960),
     excerpt: row.excerpt ?? "",
+    author: row.author ?? row.authorAccount ?? undefined,
     html: row.html ?? "",
+    tags: tagRows.map((tag) => tag.name),
     width: row.width ?? undefined,
     height: row.height ?? undefined,
   };

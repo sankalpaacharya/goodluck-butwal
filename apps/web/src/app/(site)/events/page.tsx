@@ -11,8 +11,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const upcoming = (await listEventCards()).filter((card) => !card.past).length;
   return buildMetadata({
     path: "/events",
-    title: "Events",
-    description: `${upcoming} seminars, fairs and information sessions coming up.`,
+    title: "Study abroad events and seminars",
+    description: `${upcoming} upcoming study abroad seminars, fairs and information sessions in Melbourne, Butwal and Cebu.`,
+    keywords: ["study abroad events", "study abroad seminar", "study in Australia information session"],
   });
 }
 

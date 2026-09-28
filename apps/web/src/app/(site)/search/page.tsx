@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { search } from "@/features/search/queries";
 import { loadText } from "@/features/site-text/queries";
 import { searchTerm } from "@/features/search/query";
@@ -10,11 +11,12 @@ type Props = { searchParams: Promise<{ q?: string | string[] }> };
 
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const term = searchTerm((await searchParams).q);
-  return {
+  return buildMetadata({
+    path: "/search",
     title: term ? `Search: ${term.q}` : "Search",
     description: "Search courses, institutions, destinations, services, events and news.",
-    robots: { index: false },
-  };
+    noindex: true,
+  });
 }
 
 export default async function SearchPage({ searchParams }: Props) {

@@ -16,8 +16,10 @@ import { ImageDialog } from "@/components/ui/image-dialog";
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     path: "/success-stories",
-    title: "Success stories",
-    description: "Visa grants and reviews shared by our clients.",
+    title: "Student success stories",
+    description:
+      "Student visa grants, study abroad placements and client reviews from Goodluck Education & Migration clients.",
+    keywords: ["study abroad success stories", "student visa approved", "study abroad reviews"],
   });
 }
 

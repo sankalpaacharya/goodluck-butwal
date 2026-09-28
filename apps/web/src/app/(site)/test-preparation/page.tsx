@@ -12,11 +12,17 @@ import { loadText } from "@/features/site-text/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
   const courses = await listTestPrepCourses();
-  const description = courses
+  const summary = courses
     .map((course) => course.summary)
     .filter(Boolean)
     .join(" ");
-  return buildMetadata({ path: "/test-preparation", title: "Test preparation", description });
+  const tests = [...new Set(courses.map((course) => course.testType).filter(Boolean))];
+  return buildMetadata({
+    path: "/test-preparation",
+    title: "IELTS and test preparation",
+    description: summary || "IELTS and English test preparation courses with upcoming batches from Goodluck Education & Migration.",
+    keywords: ["IELTS preparation", "IELTS coaching", ...tests.map((test) => `${test} preparation`)],
+  });
 }
 
 const TONES = ["blue", "surface"] as const;

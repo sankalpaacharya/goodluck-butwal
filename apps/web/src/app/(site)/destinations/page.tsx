@@ -12,8 +12,10 @@ import { loadText } from "@/features/site-text/queries";
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     path: "/destinations",
-    title: "Destinations",
-    description: "Study in Australia, the United Kingdom and New Zealand with Goodluck.",
+    title: "Study abroad destinations",
+    description:
+      "Study abroad in Australia, the United Kingdom and New Zealand. Student visa help, course and institution advice from Goodluck Education & Migration.",
+    keywords: ["study in Australia", "study in the UK", "study in New Zealand", "study abroad destinations"],
   });
 }
 

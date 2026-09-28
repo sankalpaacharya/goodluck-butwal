@@ -11,8 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const team = await listTeam();
   return buildMetadata({
     path: "/about/team",
-    title: "Our team",
-    description: `${team.length} people across Australia, Nepal and the Philippines.`,
+    title: "Our education consultants",
+    description: `Meet the ${team.length} study abroad and migration consultants behind Goodluck in Melbourne, Butwal and Cebu.`,
   });
 }
 

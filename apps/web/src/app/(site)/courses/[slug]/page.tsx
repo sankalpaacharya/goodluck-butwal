@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: `/courses/${slug}`,
     title: course.name,
     description: `${course.name} at ${course.institution}.`,
+    keywords: [course.name, course.level, course.category, course.destination].filter(Boolean),
   });
 }
 

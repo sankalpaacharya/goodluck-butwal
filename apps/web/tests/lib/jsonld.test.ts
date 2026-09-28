@@ -2,9 +2,8 @@ import { test, expect, vi } from "vitest";
 
 vi.mock("@goodluck/db", () => ({ db: {} }));
 
-const { toJsonLd, organization, event, breadcrumbs, faqPage } = await import(
-  "@/lib/seo/schema"
-);
+const { toJsonLd, organization, webSite, article, blog, person, event, localBusiness, breadcrumbs, faqPage } =
+  await import("@/lib/seo/schema");
 
 test("a < inside a value cannot close the script tag", () => {
   const json = toJsonLd({ name: "<\/script><script>alert(1)</script>" });
@@ -13,12 +12,104 @@ test("a < inside a value cannot close the script tag", () => {
 });
 
 test("the organization has the fields a rich result needs", () => {
-  const org = organization(["https://facebook.com/goodluck"]);
-  expect(org["@type"]).toBe("Organization");
+  const org = organization({ socials: ["https://facebook.com/goodluck"] });
+  expect(org["@type"]).toBe("EducationalOrganization");
   expect(org.name).toBe("Goodluck Education & Migration");
   expect(org.url).toBe("https://goodluck.services");
   expect(org.logo).toBe("https://goodluck.services/brand/logo.png");
   expect(org.sameAs).toEqual(["https://facebook.com/goodluck"]);
+});
+
+test("the organization lists the services it offers", () => {
+  const org = organization({
+    services: [{ name: "Education counselling", slug: "education-counselling", description: "Course and university advice." }],
+  });
+  const offer = (org.makesOffer as { itemOffered: { url: string; name: string } }[])[0];
+  expect(offer.itemOffered.name).toBe("Education counselling");
+  expect(offer.itemOffered.url).toBe("https://goodluck.services/services/education-counselling");
+});
+
+test("an organization with no services leaves makesOffer out", () => {
+  expect(organization()).not.toHaveProperty("makesOffer");
+});
+
+test("the website advertises the on-site search box", () => {
+  const site = webSite();
+  const action = site.potentialAction as { target: { urlTemplate: string }; "query-input": string };
+  expect(site["@type"]).toBe("WebSite");
+  expect(action.target.urlTemplate).toBe("https://goodluck.services/search?q={search_term_string}");
+});
+
+test("an article names its author, dates and section", () => {
+  const schema = article({
+    slug: "student-visa-changes",
+    title: "Student visa changes for 2026",
+    excerpt: "What changed.",
+    image: "/images/news/visa.webp",
+    date: "2026-01-04",
+    updatedAt: "2026-02-01T00:00:00.000Z",
+    author: "Rita Shrestha",
+    category: "Visa",
+    tags: ["Australia", "Student visa"],
+  });
+  expect(schema["@type"]).toBe("BlogPosting");
+  expect(schema.datePublished).toBe("2026-01-04");
+  expect(schema.dateModified).toBe("2026-02-01T00:00:00.000Z");
+  expect(schema.articleSection).toBe("Visa");
+  expect(schema.author).toEqual({
+    "@type": "Person",
+    name: "Rita Shrestha",
+    worksFor: { "@id": "https://goodluck.services/#organization" },
+  });
+});
+
+test("an article with no author falls back to the organization", () => {
+  const schema = article({ slug: "news-item", title: "News", excerpt: "", image: "", date: "2026-01-04" });
+  expect(schema.author).toEqual({ "@id": "https://goodluck.services/#organization" });
+});
+
+test("a headline longer than a search result keeps only its opening words", () => {
+  const schema = article({ slug: "long", title: "word ".repeat(40), excerpt: "", image: "", date: "2026-01-04" });
+  expect((schema.headline as string).length).toBeLessThanOrEqual(110);
+});
+
+test("a blog points at every post it lists", () => {
+  const schema = blog({
+    name: "News",
+    description: "Updates",
+    path: "/news",
+    posts: [{ slug: "visa-changes", title: "Visa changes", excerpt: "", image: "", date: "2026-01-04" }],
+  });
+  expect(schema["@type"]).toBe("Blog");
+  expect(schema.blogPost).toEqual([{ "@id": "https://goodluck.services/news/visa-changes#article" }]);
+});
+
+test("a person is tied to the organization they work for", () => {
+  const schema = person({ name: "Rita Shrestha", slug: "rita-shrestha", jobTitle: "Counsellor" });
+  expect(schema["@type"]).toBe("Person");
+  expect(schema.worksFor).toEqual({ "@id": "https://goodluck.services/#organization" });
+});
+
+test("an office states its hours in the form a search engine reads", () => {
+  const schema = localBusiness({
+    name: "Head Office",
+    address: "2 Queen St",
+    city: "Melbourne",
+    country: "Australia",
+    phone: "(03) 9466 4783",
+    structuredHours: [
+      { day: 0, open: "", close: "", closed: true },
+      { day: 1, open: "09:00", close: "17:00", closed: false },
+    ],
+  });
+  expect(schema.openingHoursSpecification).toEqual([
+    {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: "https://schema.org/Monday",
+      opens: "09:00",
+      closes: "17:00",
+    },
+  ]);
 });
 
 test("an organization with no social profiles leaves sameAs out", () => {

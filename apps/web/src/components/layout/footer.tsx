@@ -75,7 +75,12 @@ export function Footer({ columns, socials, text }: { columns: FooterColumn[]; so
 
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <p className="t-base text-ink">{text.copyright.replace("{year}", String(new Date().getFullYear())).replace("{name}", company.name)}</p>
-          <p className="t-base text-ink">{offices.find((o) => o.hours)?.hours}</p>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <Link href="/sitemap" className="t-base text-ink/75 transition-colors hover:text-ink">
+              Sitemap
+            </Link>
+            {offices.find((o) => o.hours)?.hours && <p className="t-base text-ink">{offices.find((o) => o.hours)?.hours}</p>}
+          </div>
         </div>
       </div>
       {/* The logo file carries "education and migration" under the wordmark; the box crops it off

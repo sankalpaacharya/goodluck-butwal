@@ -28,6 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: `/destinations/${destination}`,
     title: `Study in ${d.name}`,
     description: d.overview,
+    image: d.hero,
+    imageAlt: d.heroAlt,
+    keywords: [`study in ${d.name}`, `study abroad in ${d.name}`, `${d.name} student visa`],
   });
 }
 

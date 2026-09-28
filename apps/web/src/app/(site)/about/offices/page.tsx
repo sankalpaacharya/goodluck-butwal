@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { buildMetadata } from "@/lib/seo";
 import { Link } from "@/components/ui/link";
 import { InfoCard, InnerHero } from "@/components/shared/inner";
 import { listOfficeProfiles } from "@/features/offices/queries";
@@ -8,10 +9,11 @@ export const revalidate = 300;
 
 export async function generateMetadata(): Promise<Metadata> {
   const offices = await listOfficeProfiles();
-  return {
+  return buildMetadata({
+    path: "/about/offices",
     title: "Our offices",
-    description: offices.map((o) => `${o.city}, ${o.country}`).join(". "),
-  };
+    description: `Visit Goodluck in ${offices.map((o) => o.city).join(", ")} for study abroad, student visa and migration advice.`,
+  });
 }
 
 export default async function AboutOfficesPage() {

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
-import { localBusiness } from "@/lib/seo/schema";
+import { breadcrumbs, faqPage, localBusiness } from "@/lib/seo/schema";
 import { img } from "@/config/assets";
+import { offices } from "@/config/site";
 import { Appear } from "@/components/ui/appear";
 import { Badge } from "@/components/ui/bits";
 import { SectionHead } from "@/components/shared/inner";
@@ -22,8 +23,8 @@ import { assetSrcSet } from "@/lib/utils/media-url";
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     path: "/contact",
-    title: "Contact",
-    description: "Talk to our experts in Melbourne, Butwal or Cebu.",
+    title: "Contact our study abroad consultants",
+    description: `Talk to our education and migration consultants in ${offices.map((o) => o.city).join(", ")} about study abroad, student visas and migration.`,
   });
 }
 const tones = ["surface", "dark", "blue"] as const;
@@ -43,7 +44,13 @@ export default async function ContactPage() {
 
   return (
     <>
-      <JsonLd data={offices.map((o) => localBusiness({ name: o.label, address: o.address, city: o.city, country: o.country, phone: o.phone, hours: o.hours }))} />
+      <JsonLd
+        data={[
+          ...offices.map((o) => localBusiness({ name: o.label, address: o.address, city: o.city, country: o.country, phone: o.phone, hours: o.hours })),
+          faqPage(allFaqs),
+          breadcrumbs([{ name: "Home", path: "/" }, { name: "Contact", path: "/contact" }]),
+        ]}
+      />
       <section className="relative flex w-full flex-col items-center overflow-clip pb-[100px] pt-32 md:pb-[160px] md:pt-[158px] lg:pb-[200px] lg:pt-[194px]">
         <div aria-hidden className="absolute inset-0 z-0 overflow-clip">
           <div className="absolute inset-0 z-[1] bg-[linear-gradient(180deg,rgba(255,255,255,0.5)_0%,#fff_50%)]" />

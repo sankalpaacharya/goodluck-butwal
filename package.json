@@ -11,7 +11,8 @@
     "test": "pnpm -r test",
     "db:migrate:dev": "pnpm --filter @goodluck/db migrate:dev",
     "db:migrate:prod": "pnpm --filter @goodluck/db migrate:prod",
-    "assets:upload": "pnpm --filter web assets:upload"
+    "assets:upload": "pnpm --filter web assets:upload",
+    "og:image": "pnpm --filter web og:image"
   },
   "devDependencies": {
     "shadcn": "^4.21.0"

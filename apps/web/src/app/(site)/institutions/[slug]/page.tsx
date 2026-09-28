@@ -26,6 +26,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: `/institutions/${slug}`,
     title: institution.name,
     description: [institution.city, institution.country].filter(Boolean).join(", "),
+    image: institution.logo,
+    imageAlt: institution.name,
+    keywords: [institution.name, [institution.city, institution.country].filter(Boolean).join(" ")],
   });
 }
 

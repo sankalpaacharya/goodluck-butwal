@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { cache } from "react";
 import { notFound } from "next/navigation";
+import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/shared/json-ld";
+import { breadcrumbs, person } from "@/lib/seo/schema";
 import { and, eq } from "drizzle-orm";
 import { db } from "@goodluck/db";
 import { mediaAssets, offices, teamMembers } from "@goodluck/db/schema";
@@ -18,6 +21,7 @@ type Props = { params: Promise<{ slug: string }> };
 const getMember = cache(async (slug: string) => {
   const [row] = await db
     .select({
+      slug: teamMembers.slug,
       name: teamMembers.fullName,
       role: teamMembers.position,
       bioHtml: teamMembers.bioHtml,
@@ -39,13 +43,17 @@ export const generateStaticParams = async () =>
   (await listTeam()).map((member) => ({ slug: member.slug }));
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const member = await getMember((await params).slug);
-  if (!member) return { title: "Our team" };
+  const { slug } = await params;
+  const member = await getMember(slug);
+  if (!member) return buildMetadata({ path: "/about/team", title: "Our team", noindex: true });
   const place = [member.city, member.country].filter(Boolean).join(", ");
-  return {
+  return buildMetadata({
+    path: `/team/${slug}`,
     title: member.name,
     description: [member.role, place].filter(Boolean).join(" · ") || undefined,
-  };
+    image: member.photo,
+    imageAlt: member.name,
+  });
 }
 
 export default async function TeamMemberPage({ params }: Props) {
@@ -61,6 +69,18 @@ export default async function TeamMemberPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd
+        data={[
+          person({
+            name: member.name,
+            slug: member.slug,
+            jobTitle: member.role ?? undefined,
+            description: [member.role, place].filter(Boolean).join(" · ") || undefined,
+            image: member.photo ?? undefined,
+          }),
+          breadcrumbs([{ name: "Home", path: "/" }, { name: "Our team", path: "/about/team" }, { name: member.name, path: `/team/${member.slug}` }]),
+        ]}
+      />
       <InnerHero
         badge={place || "Our team"}
         badgeTone="chip"

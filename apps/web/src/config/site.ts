@@ -63,6 +63,28 @@ export const offices: Office[] = [
 
 export const officeById = (id: OfficeId) => offices.find((o) => o.id === id)!;
 
+export const seo = {
+  title: "Study Abroad & Foreign Education Advice | Goodluck",
+  description:
+    "Study abroad consultancy for Australia, New Zealand and the UK. Foreign education advice, student visa and migration guidance, and IELTS coaching.",
+  locale: "en_AU",
+  keywords: [
+    "study abroad consultant",
+    "foreign education advice",
+    "study abroad",
+    "education consultancy",
+    "student visa guidance",
+    "migration guidance",
+    "IELTS coaching",
+    "overseas education",
+    "study in Australia",
+    "study in New Zealand",
+    "study in the United Kingdom",
+  ],
+  countries: ["Australia", "New Zealand", "United Kingdom"],
+  cities: offices.map((office) => office.city),
+};
+
 export const social = [
   { label: "Facebook", href: "#", icon: "/images/social/facebook.webp" },
   { label: "Instagram", href: "#", icon: "/images/social/instagram.webp" },

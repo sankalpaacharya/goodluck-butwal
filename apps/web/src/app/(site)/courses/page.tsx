@@ -12,8 +12,10 @@ import { Empty } from "@/components/shared/empty";
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     path: "/courses",
-    title: "Courses",
-    description: "Search courses by destination, qualification level, category, institution and intake.",
+    title: "Study abroad courses",
+    description:
+      "Search study abroad courses by destination, qualification level, category, institution and intake, with help from Goodluck Education & Migration.",
+    keywords: ["study abroad courses", "overseas degrees", "international study programmes"],
   });
 }
 

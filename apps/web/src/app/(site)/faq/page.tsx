@@ -10,7 +10,13 @@ import { listTeam } from "@/features/team/queries";
 import { loadText } from "@/features/site-text/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildMetadata({ path: "/faq", title: "FAQ" });
+  return buildMetadata({
+    path: "/faq",
+    title: "Study abroad and visa FAQ",
+    description:
+      "Answers on study abroad applications, student visas, scholarships, migration and English tests from the Goodluck Education & Migration team.",
+    keywords: ["study abroad FAQ", "student visa questions", "overseas study questions"],
+  });
 }
 
 export default async function FaqPage() {

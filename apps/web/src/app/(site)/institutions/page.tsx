@@ -8,10 +8,12 @@ import { loadText } from "@/features/site-text/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
   const institutions = await listInstitutions();
+  const countries = [...new Set(institutions.map((i) => i.country).filter(Boolean))];
   return buildMetadata({
     path: "/institutions",
-    title: "Institutions",
-    description: `${institutions.length} universities and colleges we work with.`,
+    title: "Universities and colleges abroad",
+    description: `Browse ${institutions.length} universities and colleges in ${countries.join(", ") || "our study destinations"} that Goodluck helps international students apply to.`,
+      keywords: ["study abroad universities", "colleges abroad", "overseas university applications"],
   });
 }
 

@@ -78,7 +78,7 @@ export type OfficeProfile = PublicOffice & {
 };
 
 // Cebu is a contact address only, so /offices/cebu must 404 rather than half-render.
-const OFFICES_WITH_A_PAGE = ["au", "np"];
+export const OFFICES_WITH_A_PAGE = ["au", "np"];
 
 export const listOfficeProfiles = cache(async (): Promise<OfficeProfile[]> => {
   const rows = await db

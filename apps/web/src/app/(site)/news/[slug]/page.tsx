@@ -8,6 +8,7 @@ import { Appear } from "@/components/ui/appear";
 import { Chip } from "@/components/ui/bits";
 import { InnerHero, NewsCard, SectionHead } from "@/components/shared/inner";
 import { formatDate } from "@/lib/utils/datetime";
+import { slugify } from "@/lib/utils/slug";
 import { FaqCta } from "@/components/shared/faqs";
 import { listTeam } from "@/features/team/queries";
 import { loadText } from "@/features/site-text/queries";
@@ -24,7 +25,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: a.title,
     description: a.excerpt,
     image: a.image,
+    imageAlt: a.title,
+    type: "article",
     publishedTime: a.date,
+    modifiedTime: a.updatedAt,
+    authors: a.author ? [a.author] : [],
+    section: a.category,
+    tags: a.tags,
+    keywords: a.tags.length ? [...new Set([a.category, ...a.tags].filter(Boolean))] : undefined,
   });
 }
 
@@ -41,8 +49,23 @@ export default async function ArticlePage({ params }: Props) {
     <>
       <JsonLd
         data={[
-          article(a),
-          breadcrumbs([{ name: "Home", path: "/" }, { name: "News", path: "/news" }, { name: a.title, path: `/news/${a.slug}` }]),
+          article({
+            slug: a.slug,
+            title: a.title,
+            excerpt: a.excerpt,
+            image: a.image,
+            date: a.date,
+            updatedAt: a.updatedAt,
+            author: a.author,
+            category: a.category,
+            tags: a.tags,
+          }),
+          breadcrumbs([
+            { name: "Home", path: "/" },
+            { name: "News", path: "/news" },
+            ...(a.category ? [{ name: a.category, path: `/news/category/${slugify(a.category)}` }] : []),
+            { name: a.title, path: `/news/${a.slug}` },
+          ]),
         ]}
       />
       <InnerHero bg="field" clouds={false} pb="pb-[50px]" size="md" title={a.title} lead={a.excerpt} className="[&_h1]:order-2 [&_p]:order-3">

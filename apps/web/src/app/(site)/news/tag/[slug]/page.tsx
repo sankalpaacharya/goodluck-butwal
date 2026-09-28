@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
-import { breadcrumbs } from "@/lib/seo/schema";
+import { breadcrumbs, itemList } from "@/lib/seo/schema";
 import { notFound } from "next/navigation";
 import { getTag, listArticlesByTag } from "@/features/posts/queries";
 import { InnerHero } from "@/components/shared/inner";
@@ -12,9 +12,13 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const tag = await getTag(slug);
+  const [tag, articles] = await Promise.all([getTag(slug), listArticlesByTag(slug)]);
   return tag
-    ? buildMetadata({ path: `/news/tag/${slug}`, title: `Articles tagged ${tag.name}` })
+    ? buildMetadata({
+        path: `/news/tag/${slug}`,
+        title: `Articles tagged ${tag.name}`,
+        description: `${articles.length} ${tag.name.toLowerCase()} articles on study abroad, visas and migration from the Goodluck team.`,
+      })
     : buildMetadata({ path: "/news", title: "News", noindex: true });
 }
 
@@ -26,7 +30,16 @@ export default async function TagPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={breadcrumbs([{ name: "Home", path: "/" }, { name: "News", path: "/news" }, { name: tag.name, path: `/news/tag/${slug}` }])} />
+      <JsonLd
+        data={[
+          breadcrumbs([{ name: "Home", path: "/" }, { name: "News", path: "/news" }, { name: tag.name, path: `/news/tag/${slug}` }]),
+          itemList({
+            path: `/news/tag/${slug}`,
+            name: tag.name,
+            items: articles.map((a) => ({ path: `/news/${a.slug}`, name: a.title })),
+          }),
+        ]}
+      />
       <InnerHero badge={t("news.hero.badge", "News and updates")} badgeTone="chip" title={tag.name} lead={`${articles.length} ${articles.length === 1 ? "article" : "articles"} tagged ${tag.name}.`} clouds={false} />
       <section className="flex w-full flex-col items-center pb-[30px] md:pb-20 lg:pb-[100px]">
         <div className="container-x">

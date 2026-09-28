@@ -25,6 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     path: `/test-preparation/${slug}`,
     title: course.name,
     description: course.summary,
+    keywords: [course.name, course.testType, "test preparation", "IELTS coaching"].filter(Boolean),
   });
 }
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
 import { JsonLd } from "@/components/shared/json-ld";
 import { organization, webSite } from "@/lib/seo/schema";
+import { seo } from "@/config/site";
 import { getSocialLinks } from "@/features/settings/queries";
 import { Hero } from "@/components/shared/hero";
 import { Partners } from "@/features/partners/components/partners";
@@ -27,7 +28,7 @@ import { Team } from "@/features/team/components/team";
 import { listUpcomingEvents } from "@/features/events/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildMetadata({ path: "/" });
+  return buildMetadata({ path: "/", title: seo.title, description: seo.description, keywords: seo.keywords });
 }
 
 export default async function Home() {
@@ -51,7 +52,15 @@ export default async function Home() {
 
   return (
     <>
-      <JsonLd data={[organization(socials.map((s) => s.href)), webSite()]} />
+      <JsonLd
+        data={[
+          organization({
+            socials: socials.map((s) => s.href),
+            services: services.map((s) => ({ name: s.title, slug: s.slug, description: s.line })),
+          }),
+          webSite(),
+        ]}
+      />
       <Hero
         googleRating={googleRating}
         text={{

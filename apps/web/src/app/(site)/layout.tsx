@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { bricolage, interDisplay } from "@/styles/fonts";
-import { company } from "@/config/site";
+import { company, seo } from "@/config/site";
+import { FALLBACK_IMAGE, absoluteUrl, getSeoDefaults } from "@/lib/seo";
 import { Nav } from "@/components/layout/nav";
 import { Footer } from "@/components/layout/footer";
 import { SmoothScroll } from "@/components/layout/smooth-scroll";
@@ -16,15 +17,31 @@ import { allSettings } from "@/db/settings";
 import { loadText } from "@/features/site-text/queries";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const verification = String((await allSettings()).get("google_site_verification") ?? "").trim();
+  const [verification, defaults] = await Promise.all([allSettings(), getSeoDefaults()]);
+  const google = String(verification.get("google_site_verification") ?? "").trim();
 
   return {
     metadataBase: new URL(company.url),
     title: { default: company.name, template: `%s – ${company.short}` },
-    description: "Education counselling, visa guidance, migration guidance and IELTS coaching from offices in Melbourne, Butwal and Cebu.",
+    description: defaults.description,
+    applicationName: company.name,
+    authors: [{ name: company.name, url: company.url }],
+    creator: company.name,
+    publisher: company.name,
+    category: "education",
+    keywords: seo.keywords,
     icons: { icon: "/brand/icon.png" },
-    openGraph: { siteName: company.name, type: "website" },
-    ...(verification ? { verification: { google: verification } } : {}),
+    openGraph: {
+      type: "website",
+      siteName: company.name,
+      locale: seo.locale,
+      url: company.url,
+      title: defaults.title,
+      description: defaults.description,
+      images: [{ url: absoluteUrl(FALLBACK_IMAGE), width: 1200, height: 630, alt: company.name }],
+    },
+    twitter: { card: "summary_large_image", images: [absoluteUrl(FALLBACK_IMAGE)] },
+    ...(google ? { verification: { google } } : {}),
   };
 }
 

@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: event.title,
     description: event.summary,
     image: event.image,
+    imageAlt: event.title,
   });
 }
 

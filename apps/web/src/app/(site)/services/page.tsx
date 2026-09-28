@@ -12,8 +12,10 @@ import { loadText } from "@/features/site-text/queries";
 export async function generateMetadata(): Promise<Metadata> {
   return buildMetadata({
     path: "/services",
-    title: "Our services",
-    description: "Education counselling, visa guidance, migration guidance and IELTS coaching.",
+    title: "Education, visa and migration services",
+    description:
+      "Foreign education advice, student visa guidance, migration guidance and IELTS coaching from Goodluck offices in Melbourne, Butwal and Cebu.",
+    keywords: ["foreign education advice", "student visa guidance", "migration guidance", "IELTS coaching"],
   });
 }
 
