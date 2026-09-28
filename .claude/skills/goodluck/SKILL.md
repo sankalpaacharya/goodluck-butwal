@@ -8,25 +8,6 @@ description: Use when working on the Goodluck Education website (public site, ad
 Project knowledge for the Goodluck website: what it is, how the parts connect, and where the code
 for each part lives.
 
-## 0. How the owner uses this
-
-You do not need to be a programmer. You describe the change in plain words, the agent does the
-rest. This skill tells the agent where everything lives and what it must not break.
-
-Three rules for you:
-
-1. **Load this skill first.** Tell the agent "follow the goodluck skill" before describing the
-   task. (`CLAUDE.md` already tells agents to read `.claude/skills/` every session, so it is
-   usually loaded on its own. Say it anyway.)
-2. **Wording, photos, prices, news, team: use the admin, not the agent.** Anything you can change
-   at `/admin` never needs code. Asking the agent to change it in code creates a second copy that
-   fights the admin. The table in `docs/daily-use-admin.md` says what lives in the admin.
-3. **Never paste secrets.** Connection strings, API keys, passwords go in settings pages only,
-   never in chat. The full list is in `docs/accounts-checklist.md`.
-
-What the agent gives back: changed files, `pnpm typecheck`, `pnpm lint` and `pnpm test` all
-passing, and one line saying what to check in the browser.
-
 All paths below are relative to `apps/web/` unless they start with `packages/`, start with a
 slash, or say otherwise.
 
