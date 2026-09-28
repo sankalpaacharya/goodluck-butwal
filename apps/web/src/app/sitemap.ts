@@ -32,7 +32,6 @@ const fixed: { path: string; priority: number; frequency: Frequency }[] = [
   { path: "/contact", priority: 0.8, frequency: "monthly" },
   { path: "/contact/book-consultation", priority: 0.8, frequency: "monthly" },
   { path: "/news", priority: 0.8, frequency: "weekly" },
-  { path: "/sitemap", priority: 0.3, frequency: "weekly" },
   { path: "/events", priority: 0.7, frequency: "weekly" },
   { path: "/test-preparation/batches", priority: 0.6, frequency: "weekly" },
   { path: "/success-stories", priority: 0.6, frequency: "monthly" },
