@@ -18,8 +18,9 @@ const fields = {
   email: optionalEmail,
   phone: e164,
   linkedinUrl: httpsUrl,
-  isCoFounder: z.boolean().default(false),
-  isFeatured: z.boolean().default(false),
+  facebookUrl: httpsUrl,
+  instagramUrl: httpsUrl,
+  tiktokUrl: httpsUrl,
   status: z.enum(contentStatuses),
 };
 

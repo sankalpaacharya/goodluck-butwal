@@ -85,6 +85,13 @@
       "when": 1789800000000,
       "tag": "0011_office_socials",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1789900000000,
+      "tag": "0012_team_socials",
+      "breakpoints": true
     }
   ]
 }

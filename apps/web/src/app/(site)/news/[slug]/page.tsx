@@ -77,8 +77,8 @@ export default async function ArticlePage({ params }: Props) {
       <section className="pb-section flex w-full flex-col items-center">
         <div className="container-x">
           <div className="flex flex-col items-center gap-[50px]">
-            <Appear y={10} duration={0.6} className="aspect-[1533/458] w-full overflow-clip rounded-[10px] md:rounded-[20px]">
-              <Img src={a.image} alt={a.title} sizes={CARD_SIZES} className="size-full object-cover" loading="lazy" decoding="async" />
+            <Appear y={10} duration={0.6} className="relative aspect-[1533/458] w-full overflow-clip rounded-[10px] md:rounded-[20px]">
+              <Img src={a.image} alt={a.title} sizes={CARD_SIZES} className="absolute inset-0 size-full object-cover" loading="lazy" decoding="async" />
             </Appear>
             <div className="article article-scroll w-full max-w-[800px]" dangerouslySetInnerHTML={{ __html: a.html }} />
             <div className="w-full max-w-[800px]"><FaqCta faces={faces} /></div>

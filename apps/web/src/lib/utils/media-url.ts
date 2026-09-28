@@ -55,7 +55,7 @@ export function assetSrcSet(src: string, widths: readonly number[] = IMAGE_WIDTH
 
 // Same rule as the admin picker, kept here so a public page never imports an admin module.
 export function mediaUrl(row: MediaRow, width = 640) {
-  if (row.kind === "cloudinary") return deliver("image", `f_auto,q_auto:eco,c_limit,w_${width}`, row.cloudinaryPublicId ?? "");
+  if (row.kind === "cloudinary") return row.cloudinaryPublicId ? deliver("image", `f_auto,q_auto:eco,c_limit,w_${width}`, row.cloudinaryPublicId) : "";
   return row.staticPath ? assetUrl(row.staticPath, width) : "";
 }
 

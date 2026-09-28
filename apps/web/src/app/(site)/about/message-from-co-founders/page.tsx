@@ -28,8 +28,8 @@ export default async function CoFoundersPage() {
         <div className="container-x">
           <div className="flex flex-col gap-[30px] md:flex-row md:items-start lg:gap-[70px]">
             <Appear className="flex w-full flex-col items-start gap-10 overflow-clip rounded-[10px] bg-surface p-5 md:w-[465px] md:rounded-[30px] md:p-[30px] lg:w-[565px] lg:p-[50px]">
-              <div className="aspect-[1128/1282] w-full overflow-clip rounded-[20px] shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
-                <Img src={gl.founders} alt="Bimal Gurung and Kishor Gharti Magar" sizes="(min-width: 810px) 50vw, 100vw" className="size-full object-cover" loading="lazy" decoding="async" />
+              <div className="relative aspect-[1128/1282] w-full overflow-clip rounded-[20px] shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
+                <Img src={gl.founders} alt="Bimal Gurung and Kishor Gharti Magar" sizes="(min-width: 810px) 50vw, 100vw" className="absolute inset-0 size-full object-cover" loading="lazy" decoding="async" />
               </div>
             </Appear>
             <Appear delay={0.1} className="flex flex-1 flex-col items-start gap-5 md:gap-[30px] lg:gap-10">

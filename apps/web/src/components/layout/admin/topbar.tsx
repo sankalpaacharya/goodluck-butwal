@@ -10,7 +10,7 @@ export function TopBar() {
     <header className="sticky top-0 z-30 h-16 border-b border-border bg-background">
       <div className="flex h-full w-full items-center justify-between gap-4 px-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-2">
-          <SidebarTrigger className="-ml-1" />
+          <SidebarTrigger className="-ml-1 md:hidden" />
 
           <Link href="/admin" className="md:hidden" aria-label="Goodluck admin dashboard">
             <img src="/brand/logo.png" alt="Goodluck" className="h-6 w-auto object-contain" />

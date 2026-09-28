@@ -45,6 +45,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/admin/sidebar";
 
@@ -83,8 +84,9 @@ function initials(name: string) {
 export function AdminSidebar({ actor, name }: { actor: Actor; name: string }) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isMobile } = useSidebar();
+  const { isMobile, state } = useSidebar();
   const role = ROLE_LABEL[actor.role] ?? actor.role;
+  const wrapped = !isMobile && state === "collapsed";
 
   const groups = NAV.map((group) => ({
     ...group,
@@ -98,7 +100,7 @@ export function AdminSidebar({ actor, name }: { actor: Actor; name: string }) {
       <SidebarMenuItem key={href}>
         <SidebarMenuButton isActive={active} tooltip={label} render={<Link href={href} aria-current={active ? "page" : undefined} />}>
           <Icon />
-          <span>{label}</span>
+          <span className="group-data-[collapsible=icon]:hidden">{label}</span>
         </SidebarMenuButton>
       </SidebarMenuItem>
     );
@@ -107,11 +109,21 @@ export function AdminSidebar({ actor, name }: { actor: Actor; name: string }) {
   return (
     <Sidebar collapsible="icon">
       {/* h-16 matches the topbar, or the two top borders sit at different heights across the seam. */}
-      <SidebarHeader className="flex h-16 shrink-0 flex-row items-center border-b border-sidebar-border px-3">
-        <Link href="/admin" aria-label="Goodluck admin dashboard" className="flex items-center">
-          <img src="/brand/logo.png" alt="Goodluck" className="h-8 w-auto max-w-full object-contain object-left group-data-[collapsible=icon]:hidden" />
-          <img src="/brand/mark.png" alt="" className="hidden size-8 object-contain group-data-[collapsible=icon]:block" />
-        </Link>
+      <SidebarHeader className="group/header relative flex h-16 shrink-0 flex-row items-center border-b border-sidebar-border px-3">
+        {wrapped ? (
+          <img
+            src="/brand/mark.png"
+            alt="Goodluck"
+            className="pointer-events-none absolute right-1 top-1/2 size-7 -translate-y-1/2 object-contain transition-opacity duration-200 group-hover/header:opacity-0"
+          />
+        ) : (
+          <Link href="/admin" aria-label="Goodluck admin dashboard" className="flex items-center">
+            <img src="/brand/logo.png" alt="Goodluck" className="h-8 w-auto max-w-full object-contain object-left" />
+          </Link>
+        )}
+        {!isMobile && (
+          <SidebarTrigger className="absolute top-1/2 right-1 -translate-y-1/2 transition-opacity duration-200 group-data-[collapsible=icon]:opacity-0 group-data-[collapsible=icon]:group-hover/header:opacity-100 group-hover/header:opacity-100 focus-visible:opacity-100 active:not-aria-[haspopup]:-translate-y-1/2" />
+        )}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
@@ -134,11 +146,11 @@ export function AdminSidebar({ actor, name }: { actor: Actor; name: string }) {
             <DropdownMenu>
               <DropdownMenuTrigger render={<SidebarMenuButton size="lg" className="data-open:bg-sidebar-accent data-open:text-sidebar-accent-foreground" />}>
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground">{initials(name)}</span>
-                <span className="grid flex-1 text-left leading-tight">
+                <span className="grid flex-1 text-left leading-tight group-data-[collapsible=icon]:hidden">
                   <span className="truncate font-medium">{name}</span>
                   <span className="truncate text-xs text-muted-foreground">{role}</span>
                 </span>
-                <ChevronsUpDown className="ml-auto" />
+                <ChevronsUpDown className="ml-auto group-data-[collapsible=icon]:hidden" />
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" side={isMobile ? "bottom" : "right"} align="end" sideOffset={4}>
                 <DropdownMenuGroup>

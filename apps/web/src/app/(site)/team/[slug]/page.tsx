@@ -14,6 +14,8 @@ import { CheckRow, SocialLinks } from "@/components/ui/bits";
 import { InnerHero } from "@/components/shared/inner";
 import { loadText } from "@/features/site-text/queries";
 import { Img } from "@/components/ui/img";
+import { mediaUrl } from "@/lib/utils/media-url";
+import { socialPlatforms } from "@/config/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -27,7 +29,13 @@ const getMember = cache(async (slug: string) => {
       bioHtml: teamMembers.bioHtml,
       qualifications: teamMembers.qualifications,
       expertise: teamMembers.expertise,
-      photo: mediaAssets.staticPath,
+      kind: mediaAssets.kind,
+      staticPath: mediaAssets.staticPath,
+      cloudinaryPublicId: mediaAssets.cloudinaryPublicId,
+      linkedinUrl: teamMembers.linkedinUrl,
+      facebookUrl: teamMembers.facebookUrl,
+      instagramUrl: teamMembers.instagramUrl,
+      tiktokUrl: teamMembers.tiktokUrl,
       city: offices.city,
       country: offices.country,
     })
@@ -36,7 +44,8 @@ const getMember = cache(async (slug: string) => {
     .leftJoin(offices, eq(teamMembers.officeId, offices.id))
     .where(and(eq(teamMembers.slug, slug), eq(teamMembers.status, "published")))
     .limit(1);
-  return row;
+  if (!row) return undefined;
+  return { ...row, photo: mediaUrl(row, 640) };
 });
 
 export const generateStaticParams = async () =>
@@ -66,6 +75,9 @@ export default async function TeamMemberPage({ params }: Props) {
   const expertise = member.expertise ?? [];
   const firstName = member.name.split(" ")[0];
   const t = await loadText();
+  const socials = socialPlatforms
+    .map((platform) => ({ label: platform.label, icon: platform.icon, href: member[`${platform.key}Url`] ?? "" }))
+    .filter((link) => link.href);
 
   return (
     <>
@@ -77,6 +89,7 @@ export default async function TeamMemberPage({ params }: Props) {
             jobTitle: member.role ?? undefined,
             description: [member.role, place].filter(Boolean).join(" · ") || undefined,
             image: member.photo ?? undefined,
+            profiles: socials.map((link) => link.href),
           }),
           breadcrumbs([{ name: "Home", path: "/" }, { name: "Our team", path: "/about/team" }, { name: member.name, path: `/team/${member.slug}` }]),
         ]}
@@ -93,8 +106,8 @@ export default async function TeamMemberPage({ params }: Props) {
       {member.photo && (
         <section className="flex w-full flex-col items-center">
           <div className="w-full px-4 md:max-w-[860px] md:px-5 lg:px-[30px]">
-            <Appear className="mx-auto aspect-[345/400] w-full max-w-[420px] overflow-clip rounded-[10px] bg-surface md:rounded-[20px]">
-              <Img src={member.photo} alt={member.name} sizes="(min-width: 810px) 420px, 100vw" w={840} className="size-full object-cover object-top" fetchPriority="high" decoding="async" />
+            <Appear className="relative mx-auto aspect-[345/400] w-full max-w-[420px] overflow-clip rounded-[10px] bg-surface md:rounded-[20px]">
+              <Img src={member.photo} alt={member.name} sizes="(min-width: 810px) 420px, 100vw" w={840} className="absolute inset-0 size-full object-cover object-top" fetchPriority="high" decoding="async" />
             </Appear>
           </div>
         </section>
@@ -138,7 +151,7 @@ export default async function TeamMemberPage({ params }: Props) {
           <Appear className="flex flex-col items-center gap-5 overflow-hidden rounded-[10px] bg-surface p-5 text-center md:rounded-[30px] md:p-10">
             <h2 className="t-h3">{t("cta.person.title", "Talk to {name}").replace("{name}", firstName)}</h2>
             <p className="t-body text-muted">{t("cta.person.lead", "Book a free consultation and we will put you with the right person for your case.")}</p>
-            <SocialLinks />
+            {socials.length > 0 && <SocialLinks links={socials} />}
             <PillButton href="/contact/book-consultation" tone="dark">{t("cta.consultation", "Book a free consultation")}</PillButton>
           </Appear>
         </div>

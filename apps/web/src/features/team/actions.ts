@@ -60,8 +60,9 @@ function columns(data: TeamMemberInput, officeId: string | null) {
     email: blank(data.email),
     phone: blank(data.phone),
     linkedinUrl: blank(data.linkedinUrl),
-    isCoFounder: data.isCoFounder,
-    isFeatured: data.isFeatured,
+    facebookUrl: blank(data.facebookUrl),
+    instagramUrl: blank(data.instagramUrl),
+    tiktokUrl: blank(data.tiktokUrl),
     status: data.status,
   };
 }

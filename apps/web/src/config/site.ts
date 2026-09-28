@@ -91,6 +91,13 @@ export const social = [
   { label: "TikTok", href: "#", icon: "/images/social/tiktok.webp" },
 ];
 
+export const socialPlatforms = [
+  { key: "facebook", label: "Facebook", icon: "/images/social/facebook.webp", placeholder: "https://www.facebook.com/" },
+  { key: "instagram", label: "Instagram", icon: "/images/social/instagram.webp", placeholder: "https://www.instagram.com/" },
+  { key: "tiktok", label: "TikTok", icon: "/images/social/tiktok.webp", placeholder: "https://www.tiktok.com/@" },
+  { key: "linkedin", label: "LinkedIn", icon: "/images/social/linkedin.svg", placeholder: "https://www.linkedin.com/in/" },
+] as const;
+
 // menuOnly: listed in the mobile menu but kept out of the header bar so it stays readable.
 // A group has no page of its own: in the header it is a dropdown of icon tiles, in the mobile
 // menu a heading over an indented list.

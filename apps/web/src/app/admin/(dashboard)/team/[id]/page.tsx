@@ -45,8 +45,9 @@ export default async function TeamMemberPage({ params }: { params: Promise<{ id:
           email: row.email ?? "",
           phone: row.phone ?? "",
           linkedinUrl: row.linkedinUrl ?? "",
-          isCoFounder: row.isCoFounder,
-          isFeatured: row.isFeatured,
+          facebookUrl: row.facebookUrl ?? "",
+          instagramUrl: row.instagramUrl ?? "",
+          tiktokUrl: row.tiktokUrl ?? "",
           status: row.status,
         }}
         photo={media[row.photoId ?? ""] ?? null}

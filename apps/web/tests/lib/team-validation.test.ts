@@ -1,4 +1,5 @@
 import { test, expect } from "vitest";
+import { readFileSync } from "node:fs";
 import {
   createTeamMemberSchema,
   teamPublishProblems,
@@ -67,4 +68,35 @@ test("publishing names every missing field", () => {
 test("a photo with no alt text blocks publication", () => {
   const parsed = createTeamMemberSchema.parse(member);
   expect(teamPublishProblems(parsed, { photo: null })).toEqual(["Alt text on the photo"]);
+});
+
+test("a payload cannot set a co-founder or featured flag", () => {
+  const parsed = createTeamMemberSchema.parse({ ...member, isCoFounder: true, isFeatured: true });
+  expect(parsed).not.toHaveProperty("isCoFounder");
+  expect(parsed).not.toHaveProperty("isFeatured");
+});
+
+test("the editor offers no switch for either flag", () => {
+  const editor = readFileSync("src/features/team/components/team-editor.tsx", "utf8");
+  expect(editor).not.toMatch(/isCoFounder|isFeatured|SwitchField/);
+});
+
+test("a social address that is not https is refused", () => {
+  for (const field of ["facebookUrl", "instagramUrl", "tiktokUrl", "linkedinUrl"]) {
+    expect(createTeamMemberSchema.safeParse({ ...member, [field]: "facebook.com/rita" }).success).toBe(false);
+  }
+});
+
+test("a social address left empty is fine, since a blank one is not shown", () => {
+  const parsed = createTeamMemberSchema.parse({ ...member, facebookUrl: "", instagramUrl: "", tiktokUrl: "" });
+  expect(parsed.facebookUrl).toBe("");
+  expect(parsed.instagramUrl).toBe("");
+  expect(parsed.tiktokUrl).toBe("");
+});
+
+test("the editor asks for all four platforms", () => {
+  const editor = readFileSync("src/features/team/components/team-editor.tsx", "utf8");
+  for (const field of ["facebookUrl", "instagramUrl", "tiktokUrl", "linkedinUrl"]) {
+    expect(editor).toContain(field);
+  }
 });

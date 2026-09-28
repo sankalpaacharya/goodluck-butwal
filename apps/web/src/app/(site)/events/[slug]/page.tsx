@@ -82,8 +82,8 @@ export default async function EventPage({ params }: Props) {
         <div className="container-x">
           <div className="flex flex-col items-center gap-[50px]">
             {event.image ? (
-              <Appear y={10} duration={0.6} className="aspect-[1533/458] w-full overflow-clip rounded-[10px] md:rounded-[20px]">
-                <Img src={event.image} alt={event.title} sizes="(min-width: 810px) 800px, 100vw" className="size-full object-cover" loading="lazy" decoding="async" />
+              <Appear y={10} duration={0.6} className="relative aspect-[1533/458] w-full overflow-clip rounded-[10px] md:rounded-[20px]">
+                <Img src={event.image} alt={event.title} sizes="(min-width: 810px) 800px, 100vw" className="absolute inset-0 size-full object-cover" loading="lazy" decoding="async" />
               </Appear>
             ) : null}
 

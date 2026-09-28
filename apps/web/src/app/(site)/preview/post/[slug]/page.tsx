@@ -10,6 +10,7 @@ import { Chip } from "@/components/ui/bits";
 import { InnerHero } from "@/components/shared/inner";
 import { formatDate } from "@/lib/utils/datetime";
 import { Img } from "@/components/ui/img";
+import { mediaUrl } from "@/lib/utils/media-url";
 
 export const metadata = previewMetadata;
 export const dynamic = "force-dynamic";
@@ -27,7 +28,9 @@ export default async function PostPreview({ params }: { params: Promise<{ slug: 
       status: posts.status,
       publishedAt: posts.publishedAt,
       category: postCategories.name,
-      image: mediaAssets.staticPath,
+      kind: mediaAssets.kind,
+      staticPath: mediaAssets.staticPath,
+      cloudinaryPublicId: mediaAssets.cloudinaryPublicId,
     })
     .from(posts)
     .leftJoin(postCategories, eq(posts.categoryId, postCategories.id))
@@ -35,6 +38,7 @@ export default async function PostPreview({ params }: { params: Promise<{ slug: 
     .where(eq(posts.slug, slug));
 
   if (!post) notFound();
+  const image = mediaUrl(post, 960);
   const date = post.publishedAt ? post.publishedAt.toISOString().slice(0, 10) : "";
 
   return (
@@ -65,17 +69,17 @@ export default async function PostPreview({ params }: { params: Promise<{ slug: 
               Preview of a {post.status} article. Only signed-in staff can open this address, and
               search engines are told to ignore it.
             </p>
-            {post.image ? (
+            {image ? (
               <Appear
                 y={10}
                 duration={0.6}
-                className="aspect-[1533/458] w-full overflow-clip rounded-[10px] md:rounded-[20px]"
+                className="relative aspect-[1533/458] w-full overflow-clip rounded-[10px] md:rounded-[20px]"
               >
                 <Img
-                  src={post.image}
+                  src={image}
                   alt={post.title}
                   sizes="(min-width: 810px) 800px, 100vw"
-                  className="size-full object-cover"
+                  className="absolute inset-0 size-full object-cover"
                   loading="lazy"
                   decoding="async"
                 />

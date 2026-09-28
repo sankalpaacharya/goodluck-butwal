@@ -9,11 +9,10 @@ test("the sidebar logo block and the topbar are the same height", () => {
   const sidebar = readFileSync("src/components/layout/admin/sidebar.tsx", "utf8");
   const topbar = readFileSync("src/components/layout/admin/topbar.tsx", "utf8");
 
-  // The block that holds the logo, and the header element that draws the topbar border.
-  const logoBlock = /className="([^"]*)"(?=[\s\S]{0,200}?\/brand\/logo\.png)/.exec(sidebar)?.[1];
+  const logoBlock = /<SidebarHeader className="([^"]*)"/.exec(sidebar)?.[1];
   const topbarHeader = /<header className="([^"]*)"/.exec(topbar)?.[1];
 
-  expect(logoBlock, "no logo block in the sidebar").toBeDefined();
+  expect(logoBlock, "no sidebar header").toBeDefined();
   expect(topbarHeader, "no topbar header").toBeDefined();
 
   expect(logoBlock).toContain("h-16");

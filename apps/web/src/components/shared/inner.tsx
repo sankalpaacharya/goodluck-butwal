@@ -95,8 +95,8 @@ export function NewsCard({ article, delay = 0, className, href }: { article: Art
 export function TeamCard({ name, role, photo, office, delay = 0, href }: { name: string; role: string; photo: string; office?: string; delay?: number; href?: string }) {
   const body = (
     <>
-      <div className="aspect-[345/400] w-full overflow-clip rounded-[10px] bg-surface md:rounded-[20px]">
-        <Img src={photo} alt={name} sizes={CARD_SIZES} className="size-full object-cover object-top transition-transform duration-500 hover:scale-[1.03]" loading="lazy" decoding="async" />
+      <div className="relative aspect-[345/400] w-full overflow-clip rounded-[10px] bg-surface md:rounded-[20px]">
+        <Img src={photo} alt={name} sizes={CARD_SIZES} className="absolute inset-0 size-full object-cover object-top transition-transform duration-500 hover:scale-[1.03]" loading="lazy" decoding="async" />
       </div>
       <div className="flex flex-col items-center gap-[2px]">
         <h3 className="t-h5 text-center">{name}</h3>

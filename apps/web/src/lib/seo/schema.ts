@@ -198,8 +198,16 @@ export function blog(input: { name: string; description: string; path: string; p
   };
 }
 
-export function person(input: { name: string; slug: string; jobTitle?: string; description?: string; image?: string }): Schema {
+export function person(input: {
+  name: string;
+  slug: string;
+  jobTitle?: string;
+  description?: string;
+  image?: string;
+  profiles?: string[];
+}): Schema {
   const url = absoluteUrl(`/team/${input.slug}`);
+  const profiles = asList(input.profiles);
   return {
     "@context": "https://schema.org",
     "@type": "Person",
@@ -209,6 +217,7 @@ export function person(input: { name: string; slug: string; jobTitle?: string; d
     ...(input.jobTitle ? { jobTitle: input.jobTitle } : {}),
     ...(input.description ? { description: input.description } : {}),
     ...(input.image ? { image: input.image } : {}),
+    ...(profiles.length ? { sameAs: profiles } : {}),
     worksFor: { "@id": ORGANIZATION_ID },
     worksAt: { "@id": ORGANIZATION_ID },
   };

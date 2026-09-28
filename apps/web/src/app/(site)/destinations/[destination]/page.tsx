@@ -61,8 +61,8 @@ export default async function DestinationPage({ params }: Props) {
       <JsonLd data={breadcrumbs([{ name: "Home", path: "/" }, { name: "Destinations", path: "/destinations" }, { name: d.name, path: `/destinations/${d.slug}` }])} />
       <InnerHero bg="field" width={1260} gap="gap-5 md:gap-10 lg:gap-[50px]" title={`${t("study.destination.hero.title_prefix", "Study in")} ${d.name}`} lead={d.overview} badge={undefined} className="[&_h1]:order-2 [&_p]:order-3" after={
         <Appear delay={0.1} className="w-full">
-          <div className="aspect-[16/9] w-full overflow-clip rounded-[10px] md:rounded-[30px]">
-            <Img src={d.hero} alt={d.heroAlt} sizes="100vw" w={1280} className="size-full object-cover" fetchPriority="high" decoding="async" />
+          <div className="relative aspect-[16/9] w-full overflow-clip rounded-[10px] md:rounded-[30px]">
+            <Img src={d.hero} alt={d.heroAlt} sizes="100vw" w={1280} className="absolute inset-0 size-full object-cover" fetchPriority="high" decoding="async" />
           </div>
         </Appear>
       }>
@@ -115,8 +115,8 @@ export default async function DestinationPage({ params }: Props) {
         <div className="container-x">
           <div className="flex flex-col gap-[30px] md:flex-row md:items-start lg:gap-[70px]">
             <Appear className="order-2 flex w-full flex-col items-start gap-10 overflow-clip rounded-[10px] bg-surface p-5 md:order-1 md:w-[517px] md:rounded-[30px] lg:w-[628px] lg:px-[60px] lg:py-[30px]">
-              <div className="aspect-[1.27586] w-full overflow-clip rounded-[20px]">
-                <Img src={d.card} alt={d.name} sizes={CARD_SIZES} className="size-full object-cover" loading="lazy" decoding="async" />
+              <div className="relative aspect-[1.27586] w-full overflow-clip rounded-[20px]">
+                <Img src={d.card} alt={d.name} sizes={CARD_SIZES} className="absolute inset-0 size-full object-cover" loading="lazy" decoding="async" />
               </div>
             </Appear>
             <Appear delay={0.1} className="order-1 flex flex-1 flex-col items-start gap-5 md:order-2 md:gap-10">

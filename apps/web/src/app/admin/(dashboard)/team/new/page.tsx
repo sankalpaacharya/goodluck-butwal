@@ -31,8 +31,9 @@ export default async function NewTeamMemberPage() {
           email: "",
           phone: "",
           linkedinUrl: "",
-          isCoFounder: false,
-          isFeatured: false,
+          facebookUrl: "",
+          instagramUrl: "",
+          tiktokUrl: "",
           status: "draft",
         }}
         photo={null}

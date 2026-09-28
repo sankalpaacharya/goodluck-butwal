@@ -31,7 +31,7 @@ export default async function CsrPage() {
             {about.csr.map((c, i) => (
               <Appear key={c.name} delay={0.1 * i} className="flex flex-col gap-[10px] overflow-clip rounded-[10px] bg-surface p-[10px] md:rounded-[30px]">
                 <div className="relative aspect-[4/3] w-full overflow-clip rounded-[6px] bg-white md:rounded-[20px]">
-                  {c.photo ? <Img src={c.photo} alt={c.name} sizes={CARD_SIZES} className="size-full object-cover" loading="lazy" decoding="async" /> : <Img src={c.logo} alt={c.name} w={480} className="size-full object-contain p-10" loading="lazy" decoding="async" />}
+                  {c.photo ? <Img src={c.photo} alt={c.name} sizes={CARD_SIZES} className="absolute inset-0 size-full object-cover" loading="lazy" decoding="async" /> : <Img src={c.logo} alt={c.name} w={480} className="absolute inset-0 size-full object-contain p-10" loading="lazy" decoding="async" />}
                   <span className="absolute left-3 top-3 flex size-14 items-center justify-center rounded-full bg-white p-2 shadow-[0_4px_8px_rgba(0,0,0,0.1)]">
                     <Img src={c.logo} alt="" w={240} className="size-full object-contain" loading="lazy" decoding="async" />
                   </span>

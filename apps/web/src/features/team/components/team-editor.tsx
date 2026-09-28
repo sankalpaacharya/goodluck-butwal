@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createTeamMember, deleteTeamMember, updateTeamMember } from "@/features/team/actions";
+import { socialPlatforms } from "@/config/site";
 import { MediaPicker, type PickedMedia } from "@/features/media/components/media-picker";
 import { EditorActionBar, EditorLayout, SectionCard } from "@/components/shared/admin/editor-shell";
 import { ConfirmDialog } from "@/components/shared/admin/confirm-dialog";
@@ -12,7 +13,6 @@ import {
   ChipField,
   FieldShell,
   SelectField,
-  SwitchField,
   TextAreaField,
   TextField,
   type OfficeOption,
@@ -33,8 +33,9 @@ export type TeamValues = {
   email: string;
   phone: string;
   linkedinUrl: string;
-  isCoFounder: boolean;
-  isFeatured: boolean;
+  facebookUrl: string;
+  instagramUrl: string;
+  tiktokUrl: string;
   status: string;
 };
 
@@ -84,8 +85,9 @@ export function TeamEditor({
       email: form.email,
       phone: form.phone,
       linkedinUrl: form.linkedinUrl,
-      isCoFounder: form.isCoFounder,
-      isFeatured: form.isFeatured,
+      facebookUrl: form.facebookUrl,
+      instagramUrl: form.instagramUrl,
+      tiktokUrl: form.tiktokUrl,
       status: canPublish ? form.status : values.status || "draft",
     };
 
@@ -139,19 +141,6 @@ export function TeamEditor({
                 </div>
               </FieldShell>
             )}
-
-            <SwitchField
-              label="Co-founder"
-              help="Shown on the message from the co-founders page."
-              checked={form.isCoFounder}
-              onChange={(checked) => set("isCoFounder", checked)}
-            />
-            <SwitchField
-              label="Featured"
-              help="Featured people are shown first on the team page."
-              checked={form.isFeatured}
-              onChange={(checked) => set("isFeatured", checked)}
-            />
           </SectionCard>
         }
       >
@@ -240,14 +229,20 @@ export function TeamEditor({
             placeholder="+61390000000"
             error={errors.phone?.[0]}
           />
-          <TextField
-            name="linkedinUrl"
-            label="LinkedIn"
-            value={form.linkedinUrl}
-            onChange={(value) => set("linkedinUrl", value)}
-            placeholder="https://www.linkedin.com/in/"
-            error={errors.linkedinUrl?.[0]}
-          />
+        </SectionCard>
+
+        <SectionCard title="Social media" description="Leave one empty and it is not shown on the page.">
+          {socialPlatforms.map((platform) => (
+            <TextField
+              key={platform.key}
+              name={`${platform.key}Url`}
+              label={platform.label}
+              value={form[`${platform.key}Url`]}
+              onChange={(value) => set(`${platform.key}Url`, value)}
+              placeholder={platform.placeholder}
+              error={errors[`${platform.key}Url`]?.[0]}
+            />
+          ))}
         </SectionCard>
       </EditorLayout>
 
