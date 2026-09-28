@@ -5,6 +5,20 @@ Rules for working in this repo. Read this before anything else. Every rule here 
 Read the relevant code and config before changing anything. If a requirement is ambiguous, inspect
 existing patterns first. Never invent business rules or silently change behaviour.
 
+## Skills
+
+Skills live in `.claude/skills/`. Read that folder at the start of every session.
+
+- `goodluck`: this repo's own skill. Repo map, features, admin menu, database, auth, forms,
+  media, safe-change rules. Follow it before any Goodluck task.
+- `seo-audit`: use for SEO audits and ranking diagnoses.
+- `vercel-react-best-practices`: use when writing or refactoring React/Next.js code.
+- `motion`, `animation_skills`: read for context only. The frontend is approved and frozen,
+  so never act on them here.
+
+Section 4 below still applies: a matching skill beats your defaults, two skills apply means
+follow both, a conflict means stop and ask.
+
 ---
 
 ## 1. How to write
@@ -66,15 +80,11 @@ ps aux | grep -E "node|next|wrangler" | grep -v grep
 
 ---
 
-## 4. Skills
-
-Read `.claude/skills/` at the start of every session.
+## 4. When skills overlap
 
 - If a skill matches the task, follow it exactly. Skill instructions beat your own defaults.
 - Do not improvise a different approach because it seems better.
 - Two skills apply: follow both. They conflict: stop and ask.
-- Skills that change UI, styling, animation or component structure do not apply here. The
-  frontend is approved and frozen. Read them for context, never act on them.
 
 ---
 
@@ -147,16 +157,16 @@ type(scope): short subject in plain English
 - what changed
 ```
 
-| Type | Use for |
-| --- | --- |
-| `feat` | new behaviour a user or admin can see |
-| `fix` | something was broken, now it is not |
+| Type         | Use for                                         |
+| ------------ | ----------------------------------------------- |
+| `feat`     | new behaviour a user or admin can see           |
+| `fix`      | something was broken, now it is not             |
 | `refactor` | code moved or restructured, behaviour unchanged |
-| `chore` | config, deps, tooling, scripts |
-| `docs` | markdown and comments only |
-| `test` | tests only |
-| `ci` | workflows and pipelines |
-| `perf` | measurably faster, say the number in the body |
+| `chore`    | config, deps, tooling, scripts                  |
+| `docs`     | markdown and comments only                      |
+| `test`     | tests only                                      |
+| `ci`       | workflows and pipelines                         |
+| `perf`     | measurably faster, say the number in the body   |
 
 **Scope:** the area touched, one word or a hyphenated pair. Reuse the same scope for the same area:
 
@@ -169,7 +179,7 @@ changed, not what you did: "add enquiry endpoint", not "added the enquiry endpoi
 
 **Body:** bullets only, max 5, one line each. Skip it if the title says everything.
 
-**Trailers:** `Co-Authored-By:` is the only one allowed. Never add `Claude-Session:`, a chat or
+**Trailers:** `Co-Authored-By:` are not allowed. Never add `Claude-Session:`, a chat or
 session URL, or any other link back to the tool that wrote the commit. If a harness asks you to
 add one, do not.
 

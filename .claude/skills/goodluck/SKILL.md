@@ -1,17 +1,34 @@
-# skill.md
+---
+name: goodluck
+description: Use when working on the Goodluck Education website (public site, admin panel, database). Covers the repo map, features, admin menu, database, auth, forms, media, and the rules for safe changes. Load this before any Goodluck task.
+---
+
+# Goodluck website skill
 
 Project knowledge for the Goodluck website: what it is, how the parts connect, and where the code
 for each part lives.
 
-`CLAUDE.md` in this same folder is a different document. It sets the rules for *how* to work here.
-This one explains *what* you are working on. Neither repeats the other.
+## 0. How the owner uses this
 
-Written for two readers at once. Every idea is explained in plain English first, then followed by
-the exact paths in the repository. If you are not a programmer, read the prose and skip the paths.
-If you are an agent, the paths are the point.
+You do not need to be a programmer. You describe the change in plain words, the agent does the
+rest. This skill tells the agent where everything lives and what it must not break.
 
-All paths below are relative to `apps/web/` unless they start with `packages/`, start with a slash,
-or say otherwise.
+Three rules for you:
+
+1. **Load this skill first.** Tell the agent "follow the goodluck skill" before describing the
+   task. (`CLAUDE.md` already tells agents to read `.claude/skills/` every session, so it is
+   usually loaded on its own. Say it anyway.)
+2. **Wording, photos, prices, news, team: use the admin, not the agent.** Anything you can change
+   at `/admin` never needs code. Asking the agent to change it in code creates a second copy that
+   fights the admin. The table in `docs/daily-use-admin.md` says what lives in the admin.
+3. **Never paste secrets.** Connection strings, API keys, passwords go in settings pages only,
+   never in chat. The full list is in `docs/accounts-checklist.md`.
+
+What the agent gives back: changed files, `pnpm typecheck`, `pnpm lint` and `pnpm test` all
+passing, and one line saying what to check in the browser.
+
+All paths below are relative to `apps/web/` unless they start with `packages/`, start with a
+slash, or say otherwise.
 
 ---
 
@@ -40,12 +57,13 @@ visitor into a lead: a general enquiry, a consultation booking, an event registr
 test preparation registration.
 
 **The admin panel** at `/admin` is what staff use. It is a CMS, which means a content management
-system: a set of screens that let staff change wording, photos, prices, opening hours and page
-content without a developer touching the code. Staff also read and manage the enquiries and
-bookings that come in through the public forms.
+system: a set of screens that let staff change records, photos and page content without a
+developer touching the code. Staff also read and manage the enquiries and bookings that come in
+through the public forms.
 
 Nobody signs up on the public site. There are no student accounts. The only people who log in are
-Goodluck staff, into the admin panel.
+Goodluck staff, into the admin panel. Accounts are made by an admin under Users; visitors can
+never register.
 
 ---
 
@@ -97,8 +115,9 @@ Two smaller services:
 **Cloudflare Turnstile** is a bot check on the public forms. It replaces a CAPTCHA and usually
 shows the visitor nothing. Code: `src/lib/security/turnstile.ts`.
 
-**Google Tag Manager** carries the analytics tag. The container id is set in the admin, not in the
-code. Code: `src/components/shared/analytics.tsx`, `src/lib/integrations/analytics.ts`.
+**Google Tag Manager** carries the analytics tag. The container id is a `gtm_id` row in the
+settings table, falling back to `NEXT_PUBLIC_GTM_ID`. Code: `src/components/shared/analytics.tsx`,
+`src/lib/integrations/analytics.ts`.
 
 ---
 
@@ -109,9 +128,9 @@ At the top of the repository:
 ```text
 goodluck/
 ├── CLAUDE.md            working rules for agents
-├── skill.md             this file
-├── .claude/             skills and agent configuration
-├── .github/workflows/   CI, database migrations, backups
+├── docs/                setup and owner notes (database, email, media, Google, recovery)
+├── .claude/skills/      agent skills, including this one (goodluck/SKILL.md)
+├── .github/workflows/   CI and backups (there is no auto-migrate workflow)
 ├── designs/             design references
 ├── extras/              briefs, source assets, notes. Not part of the build.
 ├── apps/web/            the Next.js application, workspace package `web`
@@ -122,8 +141,7 @@ Inside `apps/web/`:
 
 ```text
 apps/web/
-├── docs/            handover notes for staff and for whoever runs the site
-├── public/          static files served as-is (about 30 MB of images, video, fonts, icons)
+├── public/          static files served as-is (images, video, fonts, icons)
 ├── src/app/         every URL the site answers
 ├── src/assets/      files imported by code rather than served directly (the Inter Display fonts)
 ├── src/components/  UI shared across features
@@ -162,9 +180,9 @@ what it fetches and what it renders. The fetching itself belongs in a feature.
 ### `src/features/`
 
 The bulk of the application, one folder per business area: `services`, `destinations`,
-`institutions`, `courses`, `test-prep`, `posts` (news), `events`, `team`,
-`partners`, `offices`, `pages`, `leads` (enquiries and consultations), `media`, `settings`,
-`site-text`, `search`, `users`.
+`institutions`, `courses`, `test-prep`, `posts` (news), `events`, `team`, `testimonials`
+(success stories and reviews), `partners`, `offices`, `pages`, `leads` (enquiries and
+consultations), `media`, `settings`, `site-text`, `search`, `sitemap`, `users`.
 
 Inside a feature, the same file names recur and each means the same thing:
 
@@ -222,20 +240,20 @@ Values with no database row behind them, shared by many files: the company name 
 (`site.ts`), paths to static images (`assets.ts`), display labels for enum values
 (`content-meta.ts`, `course-meta.ts`). Anything read by one place lives next to that place.
 
-### `docs/`
+### `docs/` (repo root)
 
-Handover documents: `admin-guide.md` for staff, `qa-matrix.md`, `recovery.md`, and
-`technical-handover.md`. Useful background, but `technical-handover.md` predates some changes: it
-describes a `src/server/` folder and a Sentry integration, neither of which exists any more. Trust
-the code over that file.
+Setup and owner notes: local and production setup, Neon, Turnstile, Resend, Cloudinary, Google,
+daily admin use, backups, domain, first login, recovery. Written for a non-technical owner, so
+trust the code over these files when they disagree.
 
 ---
 
 ## 4. Public website
 
 Every public page lives under `src/app/(site)/`. Almost every one of them also loads the site text
-table, so a heading or button label can be reworded in the admin without a deploy
-(`src/features/site-text/queries.ts`).
+table, so a heading or button label can be reworded without a deploy
+(`src/features/site-text/queries.ts`). Note: there is no admin screen for site text; overriding a
+value is a developer row change.
 
 **Homepage**: the shop window. Hero, partner logos, destinations, services, reviews, success
 stories, the offices orbit, news, upcoming events, FAQs.
@@ -246,12 +264,16 @@ Data: Neon, in one batch of parallel queries
 **About**: the company, its mission and values, its founders, its social responsibility work,
 and careers.
 Routes: `src/app/(site)/about/page.tsx`, `about/message-from-co-founders/`,
-`about/corporate-social-responsibility/`, `about/careers/`, `about/company-profile/`
+`about/corporate-social-responsibility/`, `about/careers/`, `about/offices/`, `about/team/`
 Feature: `src/features/pages/` (`getAboutContent`)
 Data: the `pages` table, which stores this content as editable JSON blocks
 
+**Company profile**: standalone page.
+Route: `src/app/(site)/company-profile/page.tsx`
+Feature: `src/features/pages/`
+
 **Offices**: addresses, phones, opening hours, maps, and a page per office.
-Routes: `src/app/(site)/about/offices/page.tsx`, `src/app/(site)/offices/[slug]/page.tsx`
+Routes: `src/app/(site)/offices/[slug]/page.tsx`
 Feature: `src/features/offices/`
 Data: the `offices` table
 
@@ -261,7 +283,7 @@ Feature: `src/features/team/`
 Data: the `team_members` table
 
 **Destinations (study abroad)**: one page per country: why study there, costs, visa notes, FAQs.
-Routes: `src/app/(site)/study-abroad/page.tsx`, `study-abroad/[destination]/page.tsx`
+Routes: `src/app/(site)/destinations/page.tsx`, `destinations/[destination]/page.tsx`
 Feature: `src/features/destinations/`
 Data: `destinations` and `destination_faqs`
 
@@ -294,11 +316,10 @@ Feature: `src/features/events/`
 Data: `events`, `event_registrations`
 
 **Success stories and testimonials**: client quotes and outcomes, on the homepage and their own
-page.
+page. These ARE in the admin, under Success stories and Client reviews.
 Route: `src/app/(site)/success-stories/page.tsx`
-Feature: `src/features/testimonials/components/` for the two sections
-Data: `src/features/testimonials/testimonials.ts`, checked in rather than a table, because the graphics and the
-Google quotes only change when a developer adds files to `public/`
+Feature: `src/features/testimonials/`
+Data: `success_stories` and `reviews` tables
 
 **Contact**: office cards, the general enquiry form, and FAQs.
 Route: `src/app/(site)/contact/page.tsx`
@@ -327,21 +348,22 @@ checking their work. These routes are always rendered fresh and are marked no-in
 Sign in at `/admin/login` with an email and a password of at least twelve characters. Five wrong
 attempts in fifteen minutes and it stops accepting tries for a while.
 
-The menu is defined in `src/components/layout/admin/admin-nav.ts` and each row appears only if your role is allowed
-to read that kind of record.
+The menu is defined in `src/components/layout/admin/admin-nav.ts` and each row appears only if
+your role is allowed to read that kind of record. This is the complete menu; there is nothing
+else. In particular there are NO admin screens for destinations, services, offices, site text,
+redirects, audit log or help: those rows are changed by a developer.
 
-| Section | What you manage | Screens |
-| --- | --- | --- |
-| Enquiries | enquiries and consultation requests, their status, CSV export | `admin/enquiries`, `admin/consultations` |
-| Editorial | news posts, categories, tags, events and their registrations | `admin/posts`, `admin/events` |
-| Study | destinations, institutions, courses, course categories, IELTS/PTE courses and batches | `admin/destinations`, `admin/institutions`, `admin/courses`, `admin/test-prep` |
-| Site | About-style pages, services, offices, team, partners, site text, media library | `admin/pages`, `admin/services`, `admin/offices`, `admin/team`, `admin/partners`, `admin/site-text`, `admin/media` |
-| Admin | settings, users, audit log, help | `admin/settings`, `admin/users`, `admin/audit-log`, `admin/help` |
+| Group | Screens |
+| --- | --- |
+| Enquiries | Enquiries, Consultations |
+| Content | Team, Partners, Success stories, Client reviews, News, Events, Institutions, Courses, Test preparation |
+| Media | Images, Videos |
+| Admin | Company profile, Settings, Users |
 
 Homepage content is not one screen. It is assembled from the features it shows: change a service
-in Services, a partner logo in Partners, the hero image and Google rating in Settings, and the
-headings in Site text. Success stories and the client quotes are not in the admin at all: they
-live in `src/features/testimonials/testimonials.ts`.
+in the database, a partner logo in Partners, the hero image and Google rating in Settings, and
+the headings in the site text rows. The public UI is approved and frozen, so check `CLAUDE.md`
+before changing how anything looks.
 
 ### What happens when you save
 
@@ -366,10 +388,8 @@ Zod schema from that feature's `validators.ts`, then `sanitize()` from
 `src/lib/security/sanitize.ts` for any rich text, then the write, then `writeAudit()` from
 `src/lib/security/audit.ts`, then `revalidatePath()`.
 
-Content can also be scheduled. Setting a status of "scheduled" with a future date leaves the row
-invisible until a cron job publishes it. That job runs every 15 minutes
-(`vercel.json` → `src/app/api/cron/publish-scheduled/route.ts`) and revalidates the pages the newly
-published rows appear on.
+A record is Draft, Published or Archived. There is no scheduling and no cron: to go live, a
+record is published by hand.
 
 ---
 
@@ -378,11 +398,16 @@ published rows appear on.
 Two kinds of content sit on this site, and the difference is why some things are editable in the
 admin and others are not.
 
-**CMS-managed content** lives in the database. Staff change it and the site follows.
+**CMS-managed content** lives in the database AND has an admin screen. Staff change it and the
+site follows.
 
-Examples: office phone numbers and opening hours, staff bios and photos, service descriptions and
-their step lists, destination pages, courses and institutions, news articles, events,
-the hero image, the Google rating, footer links, and almost every visible heading and button label.
+Examples: office phone numbers and opening hours (shown, not edited, in admin), staff bios and
+photos, partner logos, success stories, reviews, news articles, events, institutions, courses,
+test prep batches, the hero image, the Google rating, and media library files.
+
+**Developer-managed content** lives in the database but has NO admin screen, so only a developer
+can change the row: services, destinations, offices, site text values, settings rows (except the
+Google rating), redirects.
 
 **Application content** lives in the code and needs a developer and a deploy to change.
 
@@ -395,11 +420,11 @@ Examples:
 - Enum labels: how the value `education_fair` is displayed as "Education fair".
   `src/config/content-meta.ts`, `src/config/course-meta.ts`
 - Page structure: which sections appear on the homepage and in what order. `src/app/(site)/page.tsx`
-- The set of site text keys. An admin edits the value behind a key; adding a new key is a code
-  change, because something has to read it.
+- The set of site text keys. Changing a value behind a key is a row change; adding a new key is a
+  code change, because something has to read it.
 
-The dividing line is this: **anything a client would reasonably want to change on a Tuesday
-afternoon is in the database. Anything that changes the shape of a page is in the code.**
+The dividing line is this: **anything staff can change in the admin is in the database with a
+screen. Anything that changes the shape of a page is in the code.**
 
 One case sits deliberately between the two. Every call to `t("home.hero.cta", "Book a
 consultation")` carries its own English fallback. The database only needs a row when someone wants
@@ -414,7 +439,7 @@ table and is read directly by `/about` and by the team grid's office tabs.
 
 ## 7. Database explained simply
 
-The database stores the information the CMS manages. It is PostgreSQL, hosted by Neon.
+The database stores the information the site manages. It is PostgreSQL, hosted by Neon.
 
 The structure is declared in TypeScript rather than SQL, in `packages/db/src/schema/`. Each file groups
 related tables:
@@ -423,7 +448,7 @@ related tables:
 | --- | --- |
 | `core.ts` | `users`, `sessions`, `accounts`, `verifications`, `offices`, `media_assets` |
 | `people.ts` | `team_members`, `partners` |
-| `content.ts` | `pages`, `ui_strings` |
+| `content.ts` | `pages`, `ui_strings`, `success_stories`, `reviews` |
 | `destinations.ts` | `destinations`, `destination_faqs`, `services`, `service_faqs` |
 | `institutions.ts` | `institutions`, `institution_images`, `courses`, `course_categories` |
 | `test-prep.ts` | `test_prep_courses`, `test_prep_batches`, `test_prep_registrations` |
@@ -452,15 +477,16 @@ Service                    Destination                Institution
 
 Post ── category            IELTS/PTE course           Event
   └── tags (many to many)     └── batches                └── registrations
-                                    └── registrations
+                                     └── registrations
 ```
 
 Two tables are simple key/value stores rather than content:
 
 - `settings` holds one row per setting: the hero image id, the Google rating, the analytics
-  container id, the notification email for each office. Read through `src/db/settings.ts`.
-- `ui_strings` holds one row per piece of interface text. Developers add keys, admins edit values.
-  Read through `src/db/ui-strings.ts`.
+  container id, the notification email for each office. Read through `src/db/settings.ts`. Only
+  the Google rating has an admin screen; the rest are developer rows.
+- `ui_strings` holds one row per piece of interface text. Developers add keys and values; there
+  is no admin screen. Read through `src/db/ui-strings.ts`.
 
 **Client**: `packages/db/src/client.ts` creates the Drizzle client over the Neon HTTP driver. Every query
 in the app goes through the `db` export from this file.
@@ -468,12 +494,14 @@ in the app goes through the `db` export from this file.
 **Migrations**: a migration is a versioned change to the database structure, checked into the
 repository so every copy of the database can be brought to the same shape. They are generated from
 the schema by Drizzle Kit and live in `packages/db/migrations/`. Configuration: `packages/db/drizzle.config.ts`.
+There is NO automatic migration on deploy: the dev database is migrated with `pnpm db:migrate:dev`
+and production by hand with `pnpm db:migrate:prod` (reads `apps/web/.env.production`).
 
 **Local database**: a Neon branch, made in the Neon console and named in `apps/web/.env.local`.
 There is no local Postgres, so development and production run the same driver and the same client
 code with no branching.
 
-**Production database**: the `main` branch on Neon.
+**Production database**: the `main` branch on Neon. Never point local development at it.
 
 ---
 
@@ -502,11 +530,11 @@ browser: forms, the FAQ accordion, the office context, the animation wrappers.
 
 ### Example: the homepage
 
-`src/app/(site)/page.tsx` starts twelve queries at once inside a single `Promise.all`, because
+`src/app/(site)/page.tsx` starts all its queries at once inside a single `Promise.all`, because
 none of them depends on another. Each is a feature query, for example `listServices()` from
 `src/features/services/queries.ts`. Each returns rows already shaped for the components. The page
 then passes those objects straight into `<Hero>`, `<Services>` and the rest. `<Reviews>` and
-`<Stories>` take no rows: they read `src/features/testimonials/testimonials.ts` themselves.
+`<Stories>` take no rows: they read `src/features/testimonials/queries.ts` themselves.
 
 ### Example: a service page
 
@@ -551,9 +579,8 @@ Stored, and served from then on
 ```
 
 **Current behaviour.** `src/app/(site)/layout.tsx` sets `export const revalidate = 300`, which
-applies to every public page under it: five minutes. Four pages under `src/app/(site)/` restate the same 300
-explicitly: `events/page.tsx`, `events/[slug]/page.tsx`, `about/offices/page.tsx` and
-`offices/[slug]/page.tsx`.
+applies to every public page under it: five minutes. A few pages restate the same 300
+explicitly.
 
 Nine dynamic routes prebuild their pages with `generateStaticParams`: services, destinations,
 news, news categories, events, offices, team, test preparation and legal pages.
@@ -562,8 +589,7 @@ The homepage is regenerated when its stored copy is more than five minutes old a
 for it, or immediately after an admin save that calls `revalidatePath("/")`.
 
 **What an admin change does.** A server action calls `revalidatePath()` with the paths its record
-appears on, so the change does not wait out the five minutes. The scheduled-publish cron does the
-same for everything it publishes (`src/app/api/cron/publish-scheduled/route.ts`).
+appears on, so the change does not wait out the five minutes.
 
 **What is never cached.** The whole admin panel is marked `force-dynamic`, because a CMS showing a
 five-minute-old list would be wrong. So are the form endpoints, the preview routes, the CSV
@@ -593,7 +619,6 @@ for 1920.
 
 **Images below the fold are lazy-loaded**, so a visitor who never scrolls never downloads them.
 The hero images are the opposite: marked `fetchPriority="high"` so they start immediately.
-31 component files use `loading="lazy"`, including `src/components/shared/hero.tsx`
 
 **The desktop-only meadow is never downloaded on mobile.** The hero uses a `<picture>` element
 with a `min-width: 1200px` source, so a phone fetches a 1×1 placeholder instead of a large image
@@ -604,10 +629,9 @@ it would not show.
 excerpt and banner. They never select `body_html`, which is the largest column in the table.
 `src/features/posts/queries.ts`
 
-**Independent queries run together.** The homepage awaits one `Promise.all` of fourteen queries
-rather than fourteen sequential awaits. Over an HTTP database driver, that is the difference
-between one round trip's latency and fourteen.
-`src/app/(site)/page.tsx`
+**Independent queries run together.** The homepage awaits one `Promise.all` of its queries
+rather than sequential awaits. Over an HTTP database driver, that is the difference
+between one round trip's latency and many.
 
 **Search is one round trip.** Six searches across six tables are combined with `UNION ALL` in a
 single statement.
@@ -622,8 +646,8 @@ nanoid and zod are listed in `serverExternalPackages`, so each route chunk does 
 copy.
 `next.config.ts`
 
-**Redirects do not put a query in front of the site.** Middleware runs on every request, so the
-redirect table is loaded once and held in memory for five minutes, with one refresh in flight at a
+**Redirects do not put a query in front of the site.** There is no middleware file: the redirect
+table is loaded once and held in memory for five minutes, with one refresh in flight at a
 time and the previous map kept if a refresh fails.
 `src/lib/seo/redirects.ts`
 
@@ -682,7 +706,8 @@ markup.
 
 **Recipients**: `src/lib/email/recipients.ts`. Staff mail is routed by office: a Nepal-office
 submission goes to the `notify_email_np` setting, everything else to `notify_email_au`, falling
-back to the company address if neither is set. Both are editable in admin Settings.
+back to the company address if neither is set. Both are developer rows in the settings table;
+there is no admin screen for them.
 
 **Configuration**: `RESEND_API_KEY` and `RESEND_FROM_EMAIL` in the environment, never in the code.
 The from address must be on a domain verified with Resend, or Resend answers 403 and nothing sends.
@@ -699,8 +724,8 @@ their role and which office they belong to. The public site requires no account 
 
 **Authentication** is proving who you are. Here that is an email address and a password of at
 least twelve characters, handled by Better Auth. There are no social logins. Nobody can create
-their own account: sign-up over HTTP is blocked outright, and accounts are created by a super
-admin from `admin/users`. A deactivated account is refused at the moment a session is created.
+their own account: sign-up over HTTP is blocked outright, and accounts are created by an admin
+from `admin/users`. A deactivated account is refused at the moment a session is created.
 `src/lib/auth/index.ts`
 
 **A session** is the record that keeps you signed in after you close the tab. It is a random token
@@ -725,15 +750,16 @@ office condition to a list query, and `requireOwnership()` checks a single recor
 changed. `requireOwnership()` checks the row that came back from the database, never the office id
 that came in with the form.
 
-**How a request is protected.** Three layers, deliberately:
+**How a request is protected.** Two layers, deliberately:
 
-1. `src/middleware.ts` checks only that a session cookie is present, and redirects to the login
-   page if it is not. It does no database work and imports no auth library, because middleware
-   runs on every single request.
-2. `src/app/admin/(dashboard)/layout.tsx` calls `requireActor()`, which looks the token up in the
-   database and confirms the account is still active and the session has not expired.
-3. Each page calls `allow()` (`src/lib/auth/guard.ts`) and each server action calls
+1. `src/app/admin/(dashboard)/layout.tsx` calls `requireActor()`, which looks the token up in the
+   database and confirms the account is still active and the session has not expired. Signed-out
+   visits to `/admin` end at the login page.
+2. Each page calls `allow()` (`src/lib/auth/guard.ts`) and each server action calls
    `requirePermission()` (`src/lib/auth/rbac.ts`) for the specific thing being done.
+
+There is no middleware file. Route protection lives in the layout and in each page and action,
+because middleware would run on every single request including public pages.
 
 **An import boundary worth respecting.** `src/lib/auth/session.ts` deliberately does not import
 `src/lib/auth/index.ts`. Importing it would pull the entire Better Auth server into every admin
@@ -742,7 +768,8 @@ does its own token lookup instead, which is safe because the token is a random s
 against a row: a forged one matches nothing.
 
 **Every write is recorded.** `writeAudit()` (`src/lib/security/audit.ts`) logs who did what to
-which record, including logins and failed logins. Visible at `admin/audit-log`.
+which record, including logins and failed logins, into the `audit_log` table. There is no admin
+screen for it; read the table directly.
 
 ---
 
@@ -803,7 +830,7 @@ two people cannot take the last one.
 - **Turnstile**: `src/lib/security/turnstile.ts`. With no secret key configured it passes in
   development and **fails closed in production**, rather than quietly letting everything through.
 - **Rate limiting**: `src/lib/security/rate-limit.ts`. Counted from the submission rows themselves
-  against a hashed IP, so there is no separate store to keep in sync.
+  against a hashed IP (`MAX_PER_HOUR = 3`), so there is no separate store to keep in sync.
 - **IP hashing**: raw IP addresses are never stored. `hashIp()` in `src/lib/utils/request.ts`
   hashes with `IP_HASH_SALT`.
 - **Reference codes**: enquiries and consultations get a human-quotable code, `ENQ-…` and `CON-…`.
@@ -866,8 +893,9 @@ The site adapts to which one a visitor is dealing with, and the admin restricts 
 to their own.
 
 **Office records** live in the `offices` table: address, phone, WhatsApp, email, timezone, opening
-hours, map links, and a profile. They are edited at `admin/offices` and each has a public page at
-`/offices/<slug>`. Read through `src/features/offices/queries.ts`.
+hours, map links, and a profile. Each has a public page at `/offices/<slug>`. Read through
+`src/features/offices/queries.ts`. There is no admin screen for offices; the rows are changed by
+a developer.
 
 **How the public site picks an office.** A visitor's choice is stored in a `gem_office` cookie for
 a year. With no cookie, the browser's own timezone decides: an `Asia/Kathmandu` clock gets Nepal,
@@ -905,14 +933,17 @@ a member can be pinned to it like any other office.
 | --- | --- |
 | A public page's layout or sections | `src/app/(site)/<route>/page.tsx` |
 | Homepage sections | `src/app/(site)/page.tsx`, then the feature each section comes from |
-| Service content or its queries | `src/features/services/` |
-| Destination content | `src/features/destinations/` |
+| Service content or its queries | `src/features/services/` (no admin screen; developer row changes) |
+| Destination content | `src/features/destinations/` (no admin screen; developer row changes) |
 | News | `src/features/posts/` |
 | Events and registration rules | `src/features/events/` |
 | Courses and institutions | `src/features/courses/`, `src/features/institutions/` |
 | IELTS/PTE courses, batches, seats | `src/features/test-prep/` |
+| Success stories, client reviews | `src/features/testimonials/` |
 | Enquiries and consultations | `src/features/leads/` |
-| Offices | `src/features/offices/` |
+| Offices | `src/features/offices/` (no admin screen; developer row changes) |
+| Site text values | `src/features/site-text/` (no admin screen; developer row changes) |
+| Redirects | the `redirects` table (no admin screen; rows go in by hand) |
 | Email sending, wording or routing | `src/lib/email/` |
 | Database structure | `packages/db/src/schema/`, then `packages/db/migrations/` |
 | Shared UI | `src/components/ui/`, `src/components/shared/` |
@@ -942,7 +973,7 @@ check `CLAUDE.md` before changing how anything looks.
 
 **Change a form**: the field goes in three places: the schema in the feature's `validators.ts`,
 the input in the form component, and the insert in the API route. Add a test alongside the
-existing ones in `tests/lib/`.
+existing ones in `tests/`.
 
 **Change an email**: wording and layout in `src/lib/email/templates.ts`, who receives it in
 `src/lib/email/recipients.ts`, delivery itself in `src/lib/email/index.ts`. Any new interpolated
@@ -953,8 +984,9 @@ value must go through `esc()`.
 for the upload endpoint. Check the CSP in `next.config.ts` if a new host is involved.
 
 **Change database structure**: always schema first, then a generated migration. Never hand-edit a
-migration that has already been applied, and never change the database directly. `migrate.yml`
-applies migrations to production on every push to `main`.
+migration that has already been applied, and never change the database directly. Production is
+migrated by hand with `pnpm db:migrate:prod` (reads `apps/web/.env.production`); there is no
+workflow that does it.
 
 ---
 
@@ -985,7 +1017,7 @@ Zod schema before touching the database.
 
 **Do not expose server-only secrets to the browser.** Only `NEXT_PUBLIC_`-prefixed variables reach
 client code, and that prefix is a decision, not a formality. `CLOUDINARY_API_SECRET`,
-`RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`, `CRON_SECRET`, `IP_HASH_SALT` and `BETTER_AUTH_SECRET`
+`RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`, `IP_HASH_SALT` and `BETTER_AUTH_SECRET`
 must stay server-side.
 
 **Do not change database structure without a migration.** Schema first, generated migration
@@ -1053,11 +1085,11 @@ Why: `deleteImage()` exists in `src/lib/integrations/cloudinary.ts` but is not c
 Instead: know that this is the current behaviour before writing code that depends on either
 outcome.
 
-**`admin/redirects` is in the menu but has no page**
-What can go wrong: assuming the screen exists because `src/components/layout/admin/admin-nav.ts` links to it.
-Why: the entity and the permissions exist, and `src/lib/seo/redirects.ts` serves redirects from
-the table, but there is no page under `src/app/admin/(dashboard)/redirects/`.
-Instead: rows go in by hand, or the page needs building.
+**`redirects` has a table but no admin screen**
+What can go wrong: looking for the screen because `src/lib/seo/redirects.ts` serves redirects
+from the table.
+Why: the table and the serving code exist, but there is no page under
+`src/app/admin/(dashboard)/`. Rows go in by hand.
 
 ---
 
@@ -1076,23 +1108,24 @@ External services:
 ```text
 Cloudinary  → images
 Resend      → email
-Cloudflare  → Turnstile bot checks
+Cloudflare  → Turnstile bot checks and R2 backups
 Google Tag Manager → analytics
 ```
 
-**Deployment.** Vercel builds and deploys from the repository. `apps/web/vercel.json` registers one
-scheduled job: `/api/cron/publish-scheduled` every fifteen minutes.
+**Deployment.** Push to `main`. Vercel builds and releases the app from `apps/web`. Roll back
+with Promote on an older deployment.
 
-**Database.** Neon Postgres. Schema changes are applied by GitHub Actions, not by Vercel:
-`.github/workflows/migrate.yml` runs `drizzle-kit migrate` on every push to `main`, while Vercel
-builds the app from the same push.
+**Database.** Neon Postgres, `main` branch. Schema changes are applied BY HAND, not by Vercel and
+not by any workflow: put the live string in `apps/web/.env.production` and run
+`pnpm db:migrate:prod`. If code needs the new structure, migrate before pushing the code.
 
-**CI.** `.github/workflows/ci.yml` runs typecheck, lint and the test suite on every pull request.
+**CI.** `.github/workflows/ci.yml` runs typecheck, lint, tests and a build on every pull
+request, against the database named by the `TEST_DATABASE_URL` secret.
 
 **Backups.** `.github/workflows/backup.yml` runs three jobs: a daily database dump to Cloudflare
 R2 with 30-day retention, a weekly copy of the Cloudinary originals to R2, and a Monday freshness
-check that opens an issue if either backup has gone stale. Restore steps are in
-`docs/recovery.md`.
+check that opens an issue if either backup has gone stale. Setup (bucket, R2 token, GitHub
+secrets) is in `docs/backups.md`. Restore steps are in `docs/when-something-breaks.md`.
 
 **Environment variables**, by purpose. Values live in the hosting project's settings, never in a
 file in the repository. `.env.example` is the annotated list.
@@ -1106,9 +1139,8 @@ file in the repository. `.env.example` is the annotated list.
 | `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` | signing uploads and deletes |
 | `RESEND_API_KEY`, `RESEND_FROM_EMAIL` | email. The from domain must be verified with Resend. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` | the bot check |
-| `CRON_SECRET` | guards the scheduled-publish route |
 | `IP_HASH_SALT` | hashes IPs for rate limiting. Changing it resets rate limits. |
-| `NEXT_PUBLIC_GTM_ID` | analytics container. A Settings value overrides it. |
+| `NEXT_PUBLIC_GTM_ID` | analytics container. A `gtm_id` settings row overrides it. |
 
 **Caching in production.** Public pages are ISR at five minutes, plus immediate revalidation when
 an admin saves. Static files under `/images` and `/brand` are cached for an hour and then
@@ -1150,9 +1182,9 @@ are the three CI runs on every pull request, so a failure here is a failure ther
 slower and is only needed when you have changed something that affects the build itself: route
 configuration, `generateStaticParams`, `next.config.ts`.
 
-Tests live in `tests/`, mirroring `src/`. Some need a database and skip themselves with
-`test.runIf(hasDb)` when `DATABASE_URL` is not set, so a green run with no database is not a full
-run. The suite never calls a real external service: Resend, Cloudinary and Turnstile are mocked.
+Tests live in `tests/`, mirroring `src/`. Some need a database and skip themselves when
+`DATABASE_URL` is not set, so a green run with no database is not a full run. The suite never
+calls a real external service: Resend, Cloudinary and Turnstile are mocked.
 
 Read `CLAUDE.md` before committing. It covers commit format, comment policy, and what not to
 change.
@@ -1206,4 +1238,5 @@ TypeScript into SQL queries.
 **Honeypot**: a hidden form field a real person never fills in. When it comes back filled, the
 submission is from a bot.
 
-**Audit log**: the record of who changed what in the admin. `admin/audit-log`.
+**Audit log**: the record of who changed what in the admin. The `audit_log` table; there is no
+admin screen for it.
