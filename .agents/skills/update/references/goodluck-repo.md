@@ -1,9 +1,7 @@
----
-name: goodluck
-description: Use when working on the Goodluck Education website (public site, admin panel, database). Covers the repo map, features, admin menu, database, auth, forms, media, and the rules for safe changes. Load this before any Goodluck task.
----
+# Goodluck website reference
 
-# Goodluck website skill
+Technical reference for the Goodluck website: what it is, how the parts connect, and where the code
+for each part lives. Loaded on demand by the `update` skill when implementing a change.
 
 Project knowledge for the Goodluck website: what it is, how the parts connect, and where the code
 for each part lives.
@@ -110,7 +108,7 @@ At the top of the repository:
 goodluck/
 ├── CLAUDE.md            working rules for agents
 ├── docs/                setup and owner notes (database, email, media, Google, recovery)
-├── .claude/skills/      agent skills, including this one (goodluck/SKILL.md)
+├── .agents/skills/      agent skills, including `update` (the /update skill)
 ├── .github/workflows/   CI and backups (there is no auto-migrate workflow)
 ├── designs/             design references
 ├── extras/              briefs, source assets, notes. Not part of the build.

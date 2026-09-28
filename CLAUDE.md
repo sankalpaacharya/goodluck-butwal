@@ -9,8 +9,8 @@ existing patterns first. Never invent business rules or silently change behaviou
 
 Skills live in `.claude/skills/`. Read that folder at the start of every session.
 
-- `goodluck`: this repo's own skill. Repo map, features, admin menu, database, auth, forms,
-  media, safe-change rules. Follow it before any Goodluck task.
+- `update`: this repo's own skill. Plain-English /update changes to the Goodluck site.
+  Follow it before any Goodluck task.
 - `seo-audit`: use for SEO audits and ranking diagnoses.
 - `vercel-react-best-practices`: use when writing or refactoring React/Next.js code.
 - `motion`, `animation_skills`: read for context only. The frontend is approved and frozen,

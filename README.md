@@ -128,8 +128,8 @@ typecheck, lint, tests and a build on every pull request against the database na
 
 - `docs/`: setup and running notes for whoever owns the site (database, email, media,
   Google, admin use, recovery)
-- `.claude/skills/goodluck/SKILL.md`: the skill for agents working on this site. Say
-  "follow the goodluck skill" before describing a change.
+- `.agents/skills/update/SKILL.md`: the skill for agents working on this site. Say
+  "/update" followed by the change in plain English.
 
 ---
 
